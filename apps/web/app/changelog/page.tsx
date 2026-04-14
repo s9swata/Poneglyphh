@@ -7,11 +7,23 @@ const entries = [
     version: "v1.2.0",
     tag: "Major release",
     changes: [
-      { type: "new", text: "AI volunteer matching engine — automatically surfaces best-fit volunteers for each project" },
+      {
+        type: "new",
+        text: "AI volunteer matching engine — automatically surfaces best-fit volunteers for each project",
+      },
       { type: "new", text: "Impact heatmap: visualize regional volunteer coverage at a glance" },
-      { type: "new", text: "Multi-NGO coordination layer — share volunteer pools with partner organizations" },
-      { type: "improved", text: "Matching speed improved by 60% with updated skill graph algorithm" },
-      { type: "fixed", text: "Fixed an issue where availability calendar would not sync across timezones" },
+      {
+        type: "new",
+        text: "Multi-NGO coordination layer — share volunteer pools with partner organizations",
+      },
+      {
+        type: "improved",
+        text: "Matching speed improved by 60% with updated skill graph algorithm",
+      },
+      {
+        type: "fixed",
+        text: "Fixed an issue where availability calendar would not sync across timezones",
+      },
     ],
   },
   {
@@ -20,7 +32,10 @@ const entries = [
     tag: "Patch",
     changes: [
       { type: "improved", text: "Dashboard loading speed improved by 45%" },
-      { type: "improved", text: "Mobile volunteer profile editor now supports bulk skill selection" },
+      {
+        type: "improved",
+        text: "Mobile volunteer profile editor now supports bulk skill selection",
+      },
       { type: "fixed", text: "Resolved notification duplication bug on Firefox" },
       { type: "fixed", text: "Fixed date rendering for NGOs in non-UTC timezones" },
     ],
@@ -30,9 +45,15 @@ const entries = [
     version: "v1.1.0",
     tag: "Feature update",
     changes: [
-      { type: "new", text: "AI sub-agent system — background agents analyze program data and flag resource gaps" },
+      {
+        type: "new",
+        text: "AI sub-agent system — background agents analyze program data and flag resource gaps",
+      },
       { type: "new", text: "Slack and Airtable integrations (beta)" },
-      { type: "new", text: "Volunteer retention risk scores — get alerted before engagement drops" },
+      {
+        type: "new",
+        text: "Volunteer retention risk scores — get alerted before engagement drops",
+      },
       { type: "improved", text: "Analytics dashboard revamped with custom report builder" },
     ],
   },
@@ -50,14 +71,14 @@ const entries = [
 ];
 
 const tagColors: Record<string, string> = {
-  "new": "bg-success/10 text-success",
-  "improved": "bg-blue/10 text-blue",
-  "fixed": "bg-error/10 text-error",
+  new: "bg-success/10 text-success",
+  improved: "bg-blue/10 text-blue",
+  fixed: "bg-error/10 text-error",
 };
 
 const releaseTagColors: Record<string, string> = {
   "Major release": "bg-primary text-black",
-  "Patch": "bg-grey-3 text-grey-1",
+  Patch: "bg-grey-3 text-grey-1",
   "Feature update": "bg-black text-white",
 };
 
@@ -67,7 +88,9 @@ export default function ChangelogPage() {
       <Navigation />
       <section className="py-20 border-b border-grey-3">
         <div className="container-max max-w-3xl">
-          <p className="text-sub font-medium uppercase tracking-widest text-grey-1 mb-4">changelog</p>
+          <p className="text-sub font-medium uppercase tracking-widest text-grey-1 mb-4">
+            changelog
+          </p>
           <h1 className="text-[clamp(36px,5vw,52px)] font-medium leading-tight tracking-tight text-black">
             What&apos;s new in Poneglyph
           </h1>

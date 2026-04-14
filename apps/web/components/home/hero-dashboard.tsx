@@ -28,10 +28,14 @@ export function HeroDashboard() {
             <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
             <div className="w-3 h-3 rounded-full bg-[#28C840]" />
           </div>
-          <span className="text-[11px] font-medium text-grey-1 ml-2">Poneglyph — Global Crime Overview</span>
+          <span className="text-[11px] font-medium text-grey-1 ml-2">
+            Poneglyph — Global Crime Overview
+          </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-grey-2 bg-primary/20 px-2 py-0.5 rounded-full">Live</span>
+          <span className="text-[10px] text-grey-2 bg-primary/20 px-2 py-0.5 rounded-full">
+            Live
+          </span>
           <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
         </div>
       </div>
@@ -39,10 +43,34 @@ export function HeroDashboard() {
       {/* Stat row */}
       <div className="grid grid-cols-4 divide-x divide-grey-3 border-b border-grey-3">
         {[
-          { label: "Dataset Records", value: "112,847", delta: "+12%", up: true, spark: [40,55,48,70,63,81,74,90,88,102,97,118] },
-          { label: "AI Insights Published", value: "15,134", delta: "+8%", up: true, spark: [20,25,22,30,28,35,32,40,38,45,43,50] },
-          { label: "NGOs Contributing", value: "4,600", delta: "+24%", up: true, spark: [30,38,35,50,47,58,54,66,62,75,70,85] },
-          { label: "Campaigns Deployed", value: "8,490", delta: "+31%", up: true, spark: [100,140,120,180,160,210,190,240,230,280,260,310] },
+          {
+            label: "Dataset Records",
+            value: "112,847",
+            delta: "+12%",
+            up: true,
+            spark: [40, 55, 48, 70, 63, 81, 74, 90, 88, 102, 97, 118],
+          },
+          {
+            label: "AI Insights Published",
+            value: "15,134",
+            delta: "+8%",
+            up: true,
+            spark: [20, 25, 22, 30, 28, 35, 32, 40, 38, 45, 43, 50],
+          },
+          {
+            label: "NGOs Contributing",
+            value: "4,600",
+            delta: "+24%",
+            up: true,
+            spark: [30, 38, 35, 50, 47, 58, 54, 66, 62, 75, 70, 85],
+          },
+          {
+            label: "Campaigns Deployed",
+            value: "8,490",
+            delta: "+31%",
+            up: true,
+            spark: [100, 140, 120, 180, 160, 210, 190, 240, 230, 280, 260, 310],
+          },
         ].map((s) => (
           <div key={s.label} className="flex flex-col gap-1 p-4">
             <div className="flex items-end justify-between">
@@ -62,7 +90,9 @@ export function HeroDashboard() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <p className="text-sm font-medium text-black">Resource Allocation Over Time</p>
-            <p className="text-[11px] text-grey-1">Task Force Funds vs. Intelligence operations logged</p>
+            <p className="text-[11px] text-grey-1">
+              Task Force Funds vs. Intelligence operations logged
+            </p>
           </div>
           <div className="flex gap-3">
             {[
@@ -76,12 +106,7 @@ export function HeroDashboard() {
             ))}
           </div>
         </div>
-        <BarChart
-          data={monthly}
-          colors={["black", "primary"]}
-          height={160}
-          unit="k"
-        />
+        <BarChart data={monthly} colors={["black", "primary"]} height={160} unit="k" />
       </div>
     </div>
   );

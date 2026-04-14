@@ -61,7 +61,10 @@ export default function PrivacyPage() {
       <section className="pb-20">
         <div className="container-max max-w-2xl">
           <p className="text-body text-grey-1">
-            Questions? Contact us at <a href="mailto:privacy@poneglyph.io" className="text-black underline">privacy@poneglyph.io</a>
+            Questions? Contact us at{" "}
+            <a href="mailto:privacy@poneglyph.io" className="text-black underline">
+              privacy@poneglyph.io
+            </a>
           </p>
         </div>
       </section>

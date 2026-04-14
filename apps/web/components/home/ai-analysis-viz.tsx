@@ -28,12 +28,7 @@ export function AiAnalysisViz() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl mx-auto">
       <ChartCard title="Rescue Operations vs. Intel Gathered" subtitle="Bubble = operation scale">
-        <ScatterPlot
-          points={scatter}
-          height={200}
-          xLabel="Intel Gathered →"
-          yLabel="Rescues ↑"
-        />
+        <ScatterPlot points={scatter} height={200} xLabel="Intel Gathered →" yLabel="Rescues ↑" />
       </ChartCard>
 
       <div className="flex flex-col gap-4">
@@ -45,7 +40,13 @@ export function AiAnalysisViz() {
               { label: "Coverage", value: 67, color: "blue" as const },
               { label: "Speed", value: 91, color: "success" as const },
             ].map((r) => (
-              <ProgressRing key={r.label} value={r.value} color={r.color} label={r.label} size={72} />
+              <ProgressRing
+                key={r.label}
+                value={r.value}
+                color={r.color}
+                label={r.label}
+                size={72}
+              />
             ))}
           </div>
         </ChartCard>
@@ -53,10 +54,20 @@ export function AiAnalysisViz() {
         <ChartCard title="AI Processing Queue" subtitle="Sub-agent task throughput">
           <LineChart
             series={[
-              { label: "Tasks Queued", color: "grey", values: [40,55,48,60,52,70,65,80,72,88,80,95], filled: false },
-              { label: "Tasks Completed", color: "success", filled: true, values: [38,53,46,58,50,68,63,78,70,86,78,93] },
+              {
+                label: "Tasks Queued",
+                color: "grey",
+                values: [40, 55, 48, 60, 52, 70, 65, 80, 72, 88, 80, 95],
+                filled: false,
+              },
+              {
+                label: "Tasks Completed",
+                color: "success",
+                filled: true,
+                values: [38, 53, 46, 58, 50, 68, 63, 78, 70, 86, 78, 93],
+              },
             ]}
-            xLabels={["J","F","M","A","M","J","J","A","S","O","N","D"]}
+            xLabels={["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]}
             height={120}
             showLegend={true}
           />

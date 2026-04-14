@@ -41,17 +41,13 @@ export function AnalyticsTabsUI() {
       <div className="grid grid-cols-3 divide-x divide-grey-3 border-b border-grey-3">
         {/* Panel 1: Impact by region */}
         <div className="p-5">
-          <HBarChart
-            data={impactByRegion}
-            title="Impact by Region"
-            unit="%"
-          />
+          <HBarChart data={impactByRegion} title="Impact by Region" unit="%" />
         </div>
         {/* Panel 2: Volunteer trends */}
         <div className="p-5">
           <LineChart
             series={volunteerTrend}
-            xLabels={["J","F","M","A","M","J","J","A","S","O","N","D"]}
+            xLabels={["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]}
             height={160}
             title="Cases Tracked vs Resolved"
             showLegend={true}
@@ -73,15 +69,27 @@ export function AnalyticsTabsUI() {
       {/* Bottom 3 labels */}
       <div className="grid grid-cols-3 divide-x divide-grey-3">
         {[
-          { title: "Victim Mapping", badge: "AI", desc: "See exploitation hotzones, route tracking, and demographic vulnerabilities globally." },
-          { title: "Incident Trends", desc: "Track crime volume, seasonal variations, and cross-border reporting patterns." },
-          { title: "AI Threat Engine", desc: "Sub-agents process disparate reports and generate structured, actionable statistics." },
+          {
+            title: "Victim Mapping",
+            badge: "AI",
+            desc: "See exploitation hotzones, route tracking, and demographic vulnerabilities globally.",
+          },
+          {
+            title: "Incident Trends",
+            desc: "Track crime volume, seasonal variations, and cross-border reporting patterns.",
+          },
+          {
+            title: "AI Threat Engine",
+            desc: "Sub-agents process disparate reports and generate structured, actionable statistics.",
+          },
         ].map((f) => (
           <div key={f.title} className="p-5 flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <p className="text-[13px] font-medium text-black">{f.title}</p>
               {f.badge && (
-                <span className="text-[9px] font-medium bg-primary text-black px-1.5 py-0.5 rounded-full">{f.badge}</span>
+                <span className="text-[9px] font-medium bg-primary text-black px-1.5 py-0.5 rounded-full">
+                  {f.badge}
+                </span>
               )}
             </div>
             <p className="text-[11px] text-grey-1 leading-relaxed">{f.desc}</p>

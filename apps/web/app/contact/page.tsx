@@ -34,7 +34,9 @@ export default function ContactPage() {
                 { label: "Response time", value: "Within 24 hours" },
               ].map((item) => (
                 <div key={item.label} className="flex flex-col gap-1">
-                  <p className="text-xs font-medium uppercase tracking-widest text-grey-1">{item.label}</p>
+                  <p className="text-xs font-medium uppercase tracking-widest text-grey-1">
+                    {item.label}
+                  </p>
                   <p className="text-sm text-black">{item.value}</p>
                 </div>
               ))}
@@ -63,7 +65,9 @@ export default function ContactPage() {
               ))}
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-black" htmlFor="email">Email</label>
+              <label className="text-xs font-medium text-black" htmlFor="email">
+                Email
+              </label>
               <input
                 id="email"
                 name="email"
@@ -73,7 +77,9 @@ export default function ContactPage() {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-black" htmlFor="company">Company</label>
+              <label className="text-xs font-medium text-black" htmlFor="company">
+                Company
+              </label>
               <input
                 id="company"
                 name="company"
@@ -83,7 +89,9 @@ export default function ContactPage() {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-black" htmlFor="message">Message</label>
+              <label className="text-xs font-medium text-black" htmlFor="message">
+                Message
+              </label>
               <textarea
                 id="message"
                 name="message"

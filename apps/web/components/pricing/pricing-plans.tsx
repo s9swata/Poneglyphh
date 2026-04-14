@@ -72,22 +72,44 @@ export function PricingPlans() {
         <div
           key={plan.name}
           className={`flex flex-col gap-6 p-8 rounded-2xl border ${
-            plan.highlighted ? "bg-black text-white border-black" : "bg-white text-black border-grey-3"
+            plan.highlighted
+              ? "bg-black text-white border-black"
+              : "bg-white text-black border-grey-3"
           }`}
         >
           <div className="flex flex-col gap-2">
-            <p className={`text-sub font-medium uppercase tracking-widest ${plan.highlighted ? "text-grey-2" : "text-grey-1"}`}>{plan.name}</p>
+            <p
+              className={`text-sub font-medium uppercase tracking-widest ${plan.highlighted ? "text-grey-2" : "text-grey-1"}`}
+            >
+              {plan.name}
+            </p>
             <div className="flex items-baseline gap-1">
               <span className="text-[42px] font-semibold leading-none">{plan.price}</span>
-              {plan.period && <span className={`text-sm ${plan.highlighted ? "text-grey-2" : "text-grey-1"}`}>{plan.period}</span>}
+              {plan.period && (
+                <span className={`text-sm ${plan.highlighted ? "text-grey-2" : "text-grey-1"}`}>
+                  {plan.period}
+                </span>
+              )}
             </div>
-            <p className={`text-sm ${plan.highlighted ? "text-grey-2" : "text-grey-1"}`}>{plan.description}</p>
+            <p className={`text-sm ${plan.highlighted ? "text-grey-2" : "text-grey-1"}`}>
+              {plan.description}
+            </p>
           </div>
-          <Link href={plan.ctaHref} className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors ${plan.highlighted ? "bg-primary text-black hover:bg-primary/80" : "bg-black text-white hover:bg-black/80"}`}>{plan.cta} <ArrowRight size={14} /></Link>
-          <div className={`border-t ${plan.highlighted ? "border-white/10" : "border-grey-3"} pt-6 flex flex-col gap-3`}>
+          <Link
+            href={plan.ctaHref}
+            className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors ${plan.highlighted ? "bg-primary text-black hover:bg-primary/80" : "bg-black text-white hover:bg-black/80"}`}
+          >
+            {plan.cta} <ArrowRight size={14} />
+          </Link>
+          <div
+            className={`border-t ${plan.highlighted ? "border-white/10" : "border-grey-3"} pt-6 flex flex-col gap-3`}
+          >
             {plan.features.map((feature) => (
               <div key={feature} className="flex items-start gap-2.5 text-sm">
-                <Check size={14} className={`shrink-0 mt-0.5 ${plan.highlighted ? "text-primary" : "text-success"}`} />
+                <Check
+                  size={14}
+                  className={`shrink-0 mt-0.5 ${plan.highlighted ? "text-primary" : "text-success"}`}
+                />
                 <span className={plan.highlighted ? "text-grey-2" : "text-grey-1"}>{feature}</span>
               </div>
             ))}

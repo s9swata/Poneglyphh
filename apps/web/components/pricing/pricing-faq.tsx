@@ -27,7 +27,10 @@ export function PricingFAQ() {
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full">
       {faqs.map((faq) => (
-        <div key={faq.q} className="bg-white border border-grey-3 rounded-2xl p-6 flex flex-col gap-3">
+        <div
+          key={faq.q}
+          className="bg-white border border-grey-3 rounded-2xl p-6 flex flex-col gap-3"
+        >
           <p className="text-base font-medium text-black">{faq.q}</p>
           <p className="text-sm text-grey-1 leading-relaxed">{faq.a}</p>
         </div>

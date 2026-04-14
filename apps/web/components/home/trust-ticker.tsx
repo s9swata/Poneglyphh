@@ -1,7 +1,14 @@
 "use client";
 
 const partners = [
-  "Interpol", "Europol", "UNODC", "Polaris", "A21", "IJM", "NCMEC", "Hope for Justice",
+  "Interpol",
+  "Europol",
+  "UNODC",
+  "Polaris",
+  "A21",
+  "IJM",
+  "NCMEC",
+  "Hope for Justice",
 ];
 
 export function TrustTicker() {
@@ -11,7 +18,10 @@ export function TrustTicker() {
       <div className="ticker-wrap">
         <div className="ticker-track">
           {[...partners, ...partners].map((name, i) => (
-            <div key={i} className="flex items-center gap-2 px-10 text-sm font-medium text-grey-1 whitespace-nowrap">
+            <div
+              key={i}
+              className="flex items-center gap-2 px-10 text-sm font-medium text-grey-1 whitespace-nowrap"
+            >
               <div className="w-4 h-4 border border-grey-3 rounded" />
               {name}
             </div>

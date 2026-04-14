@@ -36,12 +36,7 @@ interface FeatureCardProps {
   description: string;
   badge?: string;
 }
-export function FeatureCard({
-  icon: Icon,
-  title,
-  description,
-  badge,
-}: FeatureCardProps) {
+export function FeatureCard({ icon: Icon, title, description, badge }: FeatureCardProps) {
   return (
     <div className="flex flex-col gap-3 p-6 bg-white border border-grey-3 rounded-2xl hover:border-grey-2 transition-colors">
       <div className="w-10 h-10 bg-grey-4 rounded-xl flex items-center justify-center">
@@ -70,17 +65,10 @@ interface StatCardProps {
   delta?: string;
   deltaPositive?: boolean;
 }
-export function StatCard({
-  value,
-  label,
-  delta,
-  deltaPositive,
-}: StatCardProps) {
+export function StatCard({ value, label, delta, deltaPositive }: StatCardProps) {
   return (
     <div className="flex flex-col gap-1 p-6 bg-white border border-grey-3 rounded-2xl">
-      <p className="text-[36px] font-semibold text-black leading-none">
-        {value}
-      </p>
+      <p className="text-[36px] font-semibold text-black leading-none">{value}</p>
       {delta && (
         <span
           className={`text-[11px] font-medium ${deltaPositive ? "text-success" : "text-error"}`}
@@ -103,12 +91,7 @@ interface PlanRowProps {
   href?: string;
   isLast?: boolean;
 }
-export function PlanRow({
-  label,
-  description,
-  href = "/pricing",
-  isLast,
-}: PlanRowProps) {
+export function PlanRow({ label, description, href = "/pricing", isLast }: PlanRowProps) {
   return (
     <div
       className={`flex items-center justify-between px-8 py-6 hover:bg-grey-4/50 transition-colors ${!isLast ? "border-b border-grey-3" : ""}`}
@@ -118,10 +101,7 @@ export function PlanRow({
         <p className="text-sm text-grey-1">{description}</p>
       </div>
       <Link href={href}>
-        <ArrowUpRight
-          size={20}
-          className="text-grey-1 hover:text-black transition-colors"
-        />
+        <ArrowUpRight size={20} className="text-grey-1 hover:text-black transition-colors" />
       </Link>
     </div>
   );
@@ -162,20 +142,14 @@ export function PricingCard({
           {name}
         </p>
         <div className="flex items-baseline gap-1">
-          <span className="text-[42px] font-semibold leading-none">
-            {price}
-          </span>
+          <span className="text-[42px] font-semibold leading-none">{price}</span>
           {period && (
-            <span
-              className={`text-sm ${highlighted ? "text-grey-2" : "text-grey-1"}`}
-            >
+            <span className={`text-sm ${highlighted ? "text-grey-2" : "text-grey-1"}`}>
               {period}
             </span>
           )}
         </div>
-        <p className={`text-sm ${highlighted ? "text-grey-2" : "text-grey-1"}`}>
-          {description}
-        </p>
+        <p className={`text-sm ${highlighted ? "text-grey-2" : "text-grey-1"}`}>{description}</p>
       </div>
       <Link
         href={ctaHref}
@@ -196,9 +170,7 @@ export function PricingCard({
               size={14}
               className={`shrink-0 mt-0.5 ${highlighted ? "text-primary" : "text-success"}`}
             />
-            <span className={highlighted ? "text-grey-2" : "text-grey-1"}>
-              {f}
-            </span>
+            <span className={highlighted ? "text-grey-2" : "text-grey-1"}>{f}</span>
           </div>
         ))}
       </div>
@@ -241,14 +213,7 @@ interface BlogCardProps {
   readTime: string;
   href: string;
 }
-export function BlogCard({
-  tag,
-  title,
-  excerpt,
-  date,
-  readTime,
-  href,
-}: BlogCardProps) {
+export function BlogCard({ tag, title, excerpt, date, readTime, href }: BlogCardProps) {
   return (
     <Link
       href={href}
@@ -363,20 +328,12 @@ interface SectionHeaderProps {
   sub?: string;
   align?: "center" | "left";
 }
-export function SectionHeader({
-  eyebrow,
-  heading,
-  sub,
-  align = "center",
-}: SectionHeaderProps) {
-  const a =
-    align === "center" ? "items-center text-center" : "items-start text-left";
+export function SectionHeader({ eyebrow, heading, sub, align = "center" }: SectionHeaderProps) {
+  const a = align === "center" ? "items-center text-center" : "items-start text-left";
   return (
     <div className={`flex flex-col gap-4 ${a}`}>
       {eyebrow && (
-        <p className="text-sub font-medium uppercase tracking-widest text-grey-1">
-          {eyebrow}
-        </p>
+        <p className="text-sub font-medium uppercase tracking-widest text-grey-1">{eyebrow}</p>
       )}
       <h2 className="text-[clamp(28px,4vw,48px)] font-medium leading-tight tracking-tight text-black">
         {heading}
@@ -395,18 +352,10 @@ interface DarkBannerProps {
   cta: string;
   ctaHref: string;
 }
-export function DarkBanner({
-  eyebrow,
-  heading,
-  cta,
-  ctaHref,
-}: DarkBannerProps) {
+export function DarkBanner({ eyebrow, heading, cta, ctaHref }: DarkBannerProps) {
   return (
     <div className="relative bg-black rounded-2xl px-8 py-20 flex flex-col items-center gap-8 overflow-hidden text-center">
-      <div
-        className="absolute inset-0 dots-pattern pointer-events-none"
-        aria-hidden
-      />
+      <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
       <p className="text-sub font-medium uppercase tracking-widest text-grey-2 relative z-10">
         {eyebrow}
       </p>

@@ -4,7 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import { Search, Send, Loader2 } from "lucide-react";
 import { ChatSidebar } from "@/components/chat-sidebar";
 import { ResearchNav } from "@/components/research/research-nav";
-import { CustomBarChart, CustomDonutChart, CustomAreaChart } from "@/components/research/research-charts";
+import {
+  CustomBarChart,
+  CustomDonutChart,
+  CustomAreaChart,
+} from "@/components/research/research-charts";
 
 interface Message {
   id: string;
@@ -27,7 +31,9 @@ export default function ResearchPage() {
   const [mounted, setMounted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (mounted && messagesEndRef.current) {
@@ -45,7 +51,9 @@ export default function ResearchPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/query?q=${encodeURIComponent(query)}`);
+      const response = await fetch(
+        `http://localhost:3001/api/query?q=${encodeURIComponent(query)}`,
+      );
       const data = await response.json();
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -55,12 +63,15 @@ export default function ResearchPage() {
         sources: data.sources,
       };
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error) {
-      setMessages((prev) => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: "Sorry, I couldn't fetch the data. Please make sure the API server is running.",
-      }]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: "Sorry, I couldn't fetch the data. Please make sure the API server is running.",
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -91,14 +102,25 @@ export default function ResearchPage() {
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center py-20">
                   <h2 className="text-[clamp(36px,6vw,56px)] font-medium leading-tight tracking-tight text-black mb-6">
-                    Ask anything about <span style={{ color: "#bfff00" }}>human trafficking data</span>
+                    Ask anything about{" "}
+                    <span style={{ color: "#bfff00" }}>human trafficking data</span>
                   </h2>
                   <p className="text-base text-grey-1 mb-10 max-w-lg">
-                    Query our open commons of 156,000+ victim records, 189 countries, and CTDC global data.
+                    Query our open commons of 156,000+ victim records, 189 countries, and CTDC
+                    global data.
                   </p>
                   <div className="flex flex-wrap gap-3 justify-center max-w-xl">
-                    {["Victims by region", "Exploitation types", "Children trafficked", "Top countries of origin"].map((suggestion) => (
-                      <button key={suggestion} onClick={() => setQuery(suggestion)} className="px-5 py-3 text-sm text-black bg-grey-4 border border-grey-3 rounded-full hover:border-grey-2 hover:bg-white transition-colors">
+                    {[
+                      "Victims by region",
+                      "Exploitation types",
+                      "Children trafficked",
+                      "Top countries of origin",
+                    ].map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        onClick={() => setQuery(suggestion)}
+                        className="px-5 py-3 text-sm text-black bg-grey-4 border border-grey-3 rounded-full hover:border-grey-2 hover:bg-white transition-colors"
+                      >
                         {suggestion}
                       </button>
                     ))}
@@ -107,20 +129,50 @@ export default function ResearchPage() {
               ) : (
                 <div className="flex flex-col gap-6 pb-20">
                   {messages.map((message) => (
-                    <div key={message.id} className={message.role === "user" ? "flex justify-end" : "flex flex-col gap-4"}>
-                      <div className={message.role === "user" ? "max-w-[80%] px-4 py-3 bg-black text-white rounded-2xl rounded-br-sm text-sm" : "text-base text-black leading-relaxed"}>
+                    <div
+                      key={message.id}
+                      className={
+                        message.role === "user" ? "flex justify-end" : "flex flex-col gap-4"
+                      }
+                    >
+                      <div
+                        className={
+                          message.role === "user"
+                            ? "max-w-[80%] px-4 py-3 bg-black text-white rounded-2xl rounded-br-sm text-sm"
+                            : "text-base text-black leading-relaxed"
+                        }
+                      >
                         {message.content}
                       </div>
-                      {message.role === "assistant" && message.charts?.map((chart, i) => (
-                        <div key={i} className="p-5 bg-grey-4 rounded-lg">
-                          {chart.type === "bar" && <CustomBarChart data={chart.data} title={chart.title} />}
-                          {chart.type === "donut" && <CustomDonutChart data={chart.data} title={chart.title} />}
-                          {chart.type === "area" && <CustomAreaChart data={chart.data} title={chart.title} />}
-                        </div>
-                      ))}
+                      {message.role === "assistant" &&
+                        message.charts?.map((chart, i) => (
+                          <div key={i} className="p-5 bg-grey-4 rounded-lg">
+                            {chart.type === "bar" && (
+                              <CustomBarChart data={chart.data} title={chart.title} />
+                            )}
+                            {chart.type === "donut" && (
+                              <CustomDonutChart data={chart.data} title={chart.title} />
+                            )}
+                            {chart.type === "area" && (
+                              <CustomAreaChart data={chart.data} title={chart.title} />
+                            )}
+                          </div>
+                        ))}
                     </div>
                   ))}
-                  {isLoading && <div className="flex items-center gap-1 ml-4"><span className="w-1.5 h-1.5 bg-grey-2 rounded-full animate-pulse" /><span className="w-1.5 h-1.5 bg-grey-2 rounded-full animate-pulse" style={{ animationDelay: "0.15s" }} /><span className="w-1.5 h-1.5 bg-grey-2 rounded-full animate-pulse" style={{ animationDelay: "0.3s" }} /></div>}
+                  {isLoading && (
+                    <div className="flex items-center gap-1 ml-4">
+                      <span className="w-1.5 h-1.5 bg-grey-2 rounded-full animate-pulse" />
+                      <span
+                        className="w-1.5 h-1.5 bg-grey-2 rounded-full animate-pulse"
+                        style={{ animationDelay: "0.15s" }}
+                      />
+                      <span
+                        className="w-1.5 h-1.5 bg-grey-2 rounded-full animate-pulse"
+                        style={{ animationDelay: "0.3s" }}
+                      />
+                    </div>
+                  )}
                   <div ref={messagesEndRef} />
                 </div>
               )}
@@ -128,10 +180,24 @@ export default function ResearchPage() {
           </div>
           <div className="px-6 py-4 border-t border-grey-3 bg-white">
             <div className="max-w-2xl mx-auto">
-              <form onSubmit={handleSubmit} className="flex items-center gap-3 bg-white border border-grey-3 rounded-lg p-3 focus-within:border-grey-2 transition-colors shadow-sm">
+              <form
+                onSubmit={handleSubmit}
+                className="flex items-center gap-3 bg-white border border-grey-3 rounded-lg p-3 focus-within:border-grey-2 transition-colors shadow-sm"
+              >
                 <Search size={18} className="text-grey-2 shrink-0 ml-1" />
-                <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Ask about trafficking data..." className="flex-1 text-base bg-transparent outline-none text-black placeholder:text-grey-2" disabled={isLoading} />
-                <button type="submit" disabled={!query.trim() || isLoading} className="p-2 bg-black text-white rounded hover:bg-black/80 transition-colors">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Ask about trafficking data..."
+                  className="flex-1 text-base bg-transparent outline-none text-black placeholder:text-grey-2"
+                  disabled={isLoading}
+                />
+                <button
+                  type="submit"
+                  disabled={!query.trim() || isLoading}
+                  className="p-2 bg-black text-white rounded hover:bg-black/80 transition-colors"
+                >
                   {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 </button>
               </form>

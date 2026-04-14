@@ -1,8 +1,14 @@
 "use client";
 
 const partners = [
-  "UNICEF", "Oxfam", "Save The Children", "Red Cross", "Care International",
-  "World Vision", "Médecins Sans Frontières", "Action Against Hunger",
+  "UNICEF",
+  "Oxfam",
+  "Save The Children",
+  "Red Cross",
+  "Care International",
+  "World Vision",
+  "Médecins Sans Frontières",
+  "Action Against Hunger",
 ];
 
 export function LogoTicker() {

@@ -8,7 +8,8 @@ const solutions = [
     icon: Heart,
     audience: "Field Contributors",
     title: "Submit observations & field data",
-    description: "Submit observations, incident reports, and field data. Your submissions become intelligence that helps the whole sector.",
+    description:
+      "Submit observations, incident reports, and field data. Your submissions become intelligence that helps the whole sector.",
     cta: "Start contributing",
     href: "/pricing",
   },
@@ -16,7 +17,8 @@ const solutions = [
     icon: Building2,
     audience: "Data-Contributing NGOs",
     title: "Centralize your reporting",
-    description: "Centralize your reporting. AI cleans, tags, and indexes your submissions — and publishes trends back to you.",
+    description:
+      "Centralize your reporting. AI cleans, tags, and indexes your submissions — and publishes trends back to you.",
     cta: "Connect your team",
     href: "/pricing",
   },
@@ -24,7 +26,8 @@ const solutions = [
     icon: Globe,
     audience: "Research Organizations",
     title: "Agentic research at scale",
-    description: "Query 156,000+ records, commission agentic research runs, and access AI-generated briefings via our open API.",
+    description:
+      "Query 156,000+ records, commission agentic research runs, and access AI-generated briefings via our open API.",
     cta: "Access the terminal",
     href: "/contact",
   },
@@ -33,27 +36,33 @@ const solutions = [
 const useCases = [
   {
     title: "Real-time incident tracking",
-    description: "Automatically merge qualitative field reports with quantitative incident data from multiple NGOs into one view.",
+    description:
+      "Automatically merge qualitative field reports with quantitative incident data from multiple NGOs into one view.",
   },
   {
     title: "Longitudinal trend monitoring",
-    description: "Use historical dataset trends to identify high-risk regions before criminal networks expand operations.",
+    description:
+      "Use historical dataset trends to identify high-risk regions before criminal networks expand operations.",
   },
   {
     title: "Multi-source data fusion",
-    description: "Let AI agents find hidden links between seemingly isolated incidents submitted by different agencies.",
+    description:
+      "Let AI agents find hidden links between seemingly isolated incidents submitted by different agencies.",
   },
   {
     title: "AI-generated insight briefs",
-    description: "Generate verified statistical reports on intervention outcomes for board members and global task forces.",
+    description:
+      "Generate verified statistical reports on intervention outcomes for board members and global task forces.",
   },
   {
     title: "Data gap identification",
-    description: "Discover missing regions or missing incident types automatically using AI, so you know where to deploy resources next.",
+    description:
+      "Discover missing regions or missing incident types automatically using AI, so you know where to deploy resources next.",
   },
   {
     title: "Campaign outcome measurement",
-    description: "Measure the exact impact of your interventions by tracking intelligence trends before and after your campaigns.",
+    description:
+      "Measure the exact impact of your interventions by tracking intelligence trends before and after your campaigns.",
   },
 ];
 
@@ -70,7 +79,8 @@ export default function SolutionsPage() {
             Open data intelligence for everyone who fights exploitation.
           </h1>
           <p className="text-body text-grey-1 max-w-md">
-            Whether you collect data in the field or analyze it from a desk — Poneglyph is your platform.
+            Whether you collect data in the field or analyze it from a desk — Poneglyph is your
+            platform.
           </p>
         </div>
       </section>
@@ -79,12 +89,17 @@ export default function SolutionsPage() {
       <section className="py-24 bg-white">
         <div className="container-max grid grid-cols-1 md:grid-cols-3 gap-6">
           {solutions.map((s) => (
-            <div key={s.audience} className="flex flex-col gap-6 p-8 bg-grey-4 border border-grey-3 rounded-2xl">
+            <div
+              key={s.audience}
+              className="flex flex-col gap-6 p-8 bg-grey-4 border border-grey-3 rounded-2xl"
+            >
               <div className="flex flex-col gap-3">
                 <div className="w-10 h-10 bg-white border border-grey-3 rounded-xl flex items-center justify-center">
                   <s.icon size={20} className="text-black" />
                 </div>
-                <p className="text-sub font-medium uppercase tracking-widest text-grey-1">{s.audience}</p>
+                <p className="text-sub font-medium uppercase tracking-widest text-grey-1">
+                  {s.audience}
+                </p>
               </div>
               <div className="flex flex-col gap-3 flex-1">
                 <h2 className="text-xl font-medium text-black leading-snug">{s.title}</h2>
@@ -112,7 +127,10 @@ export default function SolutionsPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {useCases.map((uc) => (
-              <div key={uc.title} className="flex flex-col gap-3 p-6 bg-white border border-grey-3 rounded-2xl">
+              <div
+                key={uc.title}
+                className="flex flex-col gap-3 p-6 bg-white border border-grey-3 rounded-2xl"
+              >
                 <h3 className="text-base font-medium text-black">{uc.title}</h3>
                 <p className="text-sm text-grey-1 leading-relaxed">{uc.description}</p>
               </div>
@@ -126,7 +144,9 @@ export default function SolutionsPage() {
         <div className="max-w-container mx-auto">
           <div className="relative bg-black rounded-2xl px-8 py-20 flex flex-col items-center gap-8 overflow-hidden text-center">
             <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
-            <p className="text-sub font-medium uppercase tracking-widest text-grey-2 relative z-10">ready to start?</p>
+            <p className="text-sub font-medium uppercase tracking-widest text-grey-2 relative z-10">
+              ready to start?
+            </p>
             <h2 className="text-[clamp(36px,5vw,60px)] font-medium leading-tight tracking-tight text-white relative z-10 max-w-xl">
               Find the right plan for your organization
             </h2>

@@ -23,16 +23,18 @@ export default function HomePage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchData, setSearchData] = useState<any[]>([]);
-  
+
   const showResults = hasSearched && searchQuery.trim().length > 0;
-  
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     setIsSearching(true);
     setHasSearched(true);
     try {
-      const response = await fetch(`http://localhost:3001/api/query?q=${encodeURIComponent(searchQuery)}`);
+      const response = await fetch(
+        `http://localhost:3001/api/query?q=${encodeURIComponent(searchQuery)}`,
+      );
       const data = await response.json();
       setSearchData(data.charts || []);
     } catch (err) {
@@ -42,16 +44,16 @@ export default function HomePage() {
       setIsSearching(false);
     }
   };
-  
+
   const handleClearSearch = () => {
     setSearchQuery("");
     setHasSearched(false);
   };
-  
+
   return (
     <>
       <Navigation />
-      
+
       {/* ══ HERO ══ */}
       <section className="relative overflow-hidden bg-white">
         <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
@@ -63,9 +65,10 @@ export default function HomePage() {
             <Highlight>data commons</Highlight>
           </h1>
           <p className="text-body-lg text-grey-1 max-w-md">
-            NGOs upload field data. AI extracts insights. Researchers, journalists, and task forces access them — free, open, and actionable.
+            NGOs upload field data. AI extracts insights. Researchers, journalists, and task forces
+            access them — free, open, and actionable.
           </p>
-          
+
           <form onSubmit={handleSearch} className="w-full max-w-xl">
             <div className="flex items-center gap-2 bg-white border border-grey-3 rounded-xl p-2 shadow-sm focus-within:border-grey-2 transition-colors">
               <Search size={20} className="text-grey-2 shrink-0 ml-1" />
@@ -85,22 +88,31 @@ export default function HomePage() {
               </button>
             </div>
           </form>
-          
+
           {showResults && !isSearching && (
             <div className="w-full">
               <SearchResults query={searchQuery} results={searchData} />
-              <button onClick={handleClearSearch} className="mt-6 text-sm text-grey-1 hover:text-black underline">
+              <button
+                onClick={handleClearSearch}
+                className="mt-6 text-sm text-grey-1 hover:text-black underline"
+              >
                 Clear search
               </button>
             </div>
           )}
-          
+
           {!showResults && (
             <div className="flex items-center gap-3">
-              <Link href="/research" className="px-5 py-2.5 border border-grey-3 text-black text-sm font-medium rounded-xl hover:bg-grey-4 transition-colors">
+              <Link
+                href="/research"
+                className="px-5 py-2.5 border border-grey-3 text-black text-sm font-medium rounded-xl hover:bg-grey-4 transition-colors"
+              >
                 View insights
               </Link>
-              <Link href="/contact" className="flex items-center gap-2 px-5 py-2.5 bg-black text-white text-sm font-medium rounded-xl hover:bg-black/80 transition-colors">
+              <Link
+                href="/contact"
+                className="flex items-center gap-2 px-5 py-2.5 bg-black text-white text-sm font-medium rounded-xl hover:bg-black/80 transition-colors"
+              >
                 Submit your dataset <ArrowRight size={14} />
               </Link>
             </div>
@@ -117,8 +129,13 @@ export default function HomePage() {
       <section className="py-24 bg-white overflow-hidden">
         <div className="container-max flex flex-col gap-10">
           <div className="flex flex-col items-center gap-3 text-center">
-            <h2 className="text-[clamp(28px,4vw,44px)] font-medium leading-tight tracking-tight text-black">Latest Statistics</h2>
-            <p className="text-body text-grey-1 max-w-lg">Explore dynamic articles and statistics on global exploitation, organized crime, and human trafficking networks.</p>
+            <h2 className="text-[clamp(28px,4vw,44px)] font-medium leading-tight tracking-tight text-black">
+              Latest Statistics
+            </h2>
+            <p className="text-body text-grey-1 max-w-lg">
+              Explore dynamic articles and statistics on global exploitation, organized crime, and
+              human trafficking networks.
+            </p>
           </div>
           <div className="-mx-4 px-4 lg:mx-0 lg:px-0">
             <IntelligenceReports />
@@ -132,8 +149,13 @@ export default function HomePage() {
       <section className="py-24 bg-white">
         <div className="container-max flex flex-col items-center gap-10">
           <div className="flex flex-col items-center gap-6 text-center">
-            <h2 className="text-[clamp(32px,5vw,52px)] font-medium leading-tight tracking-tight text-black">All humanitarian data, one open <Highlight>platform</Highlight></h2>
-            <Link href="/contact" className="flex items-center gap-2 px-5 py-2.5 bg-black text-white text-sm font-medium rounded-xl hover:bg-black/80 transition-colors">
+            <h2 className="text-[clamp(32px,5vw,52px)] font-medium leading-tight tracking-tight text-black">
+              All humanitarian data, one open <Highlight>platform</Highlight>
+            </h2>
+            <Link
+              href="/contact"
+              className="flex items-center gap-2 px-5 py-2.5 bg-black text-white text-sm font-medium rounded-xl hover:bg-black/80 transition-colors"
+            >
               Request access <ArrowRight size={14} />
             </Link>
           </div>
@@ -155,8 +177,13 @@ export default function HomePage() {
       <section className="py-24 bg-grey-4/30">
         <div className="container-max flex flex-col items-center gap-12">
           <div className="flex flex-col items-center gap-3 text-center max-w-xl">
-            <h2 className="text-[clamp(28px,4vw,44px)] font-medium tracking-tight text-black">Powered by field-aware intelligence</h2>
-            <p className="text-body text-grey-1">Poneglyph agents process thousands of disparate reports to extract structured, actionable data points for task forces.</p>
+            <h2 className="text-[clamp(28px,4vw,44px)] font-medium tracking-tight text-black">
+              Powered by field-aware intelligence
+            </h2>
+            <p className="text-body text-grey-1">
+              Poneglyph agents process thousands of disparate reports to extract structured,
+              actionable data points for task forces.
+            </p>
           </div>
           <AiAnalysisViz />
         </div>

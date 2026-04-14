@@ -45,19 +45,23 @@ const openings = [
 const values = [
   {
     title: "Mission-driven",
-    description: "We measure success by real-world impact, not just product metrics. Every feature we ship should move resources toward people who need them.",
+    description:
+      "We measure success by real-world impact, not just product metrics. Every feature we ship should move resources toward people who need them.",
   },
   {
     title: "Remote-first",
-    description: "Work from wherever you do your best thinking. We have been remote since day one and built our culture around it.",
+    description:
+      "Work from wherever you do your best thinking. We have been remote since day one and built our culture around it.",
   },
   {
     title: "Ownership culture",
-    description: "Everyone owns their area. We trust our people to make the right calls — and we give them the context to do so.",
+    description:
+      "Everyone owns their area. We trust our people to make the right calls — and we give them the context to do so.",
   },
   {
     title: "Radically transparent",
-    description: "Open salaries, open roadmap, open decisions. If you need to guess what leadership is thinking, we have failed.",
+    description:
+      "Open salaries, open roadmap, open decisions. If you need to guess what leadership is thinking, we have failed.",
   },
 ];
 
@@ -74,7 +78,8 @@ export default function CareersPage() {
             Build technology that actually saves lives
           </h1>
           <p className="text-body text-grey-1 max-w-md">
-            Join a team of engineers, researchers, and impact workers building the coordination layer the humanitarian sector has been missing.
+            Join a team of engineers, researchers, and impact workers building the coordination
+            layer the humanitarian sector has been missing.
           </p>
           <Link
             href="#openpositions"
@@ -89,14 +94,19 @@ export default function CareersPage() {
       <section className="py-24 bg-grey-4">
         <div className="container-max flex flex-col gap-12">
           <div className="flex flex-col items-center gap-4 text-center">
-            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">our culture</p>
+            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">
+              our culture
+            </p>
             <h2 className="text-[clamp(28px,4vw,40px)] font-medium leading-tight tracking-tight text-black">
               How we work
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {values.map((v) => (
-              <div key={v.title} className="bg-white border border-grey-3 rounded-2xl p-6 flex flex-col gap-3">
+              <div
+                key={v.title}
+                className="bg-white border border-grey-3 rounded-2xl p-6 flex flex-col gap-3"
+              >
                 <h3 className="text-base font-medium text-black">{v.title}</h3>
                 <p className="text-sm text-grey-1 leading-relaxed">{v.description}</p>
               </div>
@@ -109,7 +119,9 @@ export default function CareersPage() {
       <section id="openpositions" className="py-24 bg-white">
         <div className="container-max flex flex-col gap-10">
           <div className="flex flex-col gap-4">
-            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">open positions</p>
+            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">
+              open positions
+            </p>
             <h2 className="text-[clamp(28px,4vw,40px)] font-medium leading-tight tracking-tight text-black">
               We&apos;re hiring
             </h2>

@@ -9,60 +9,70 @@ const posts = [
     slug: "poneglyph-is-open",
     tag: "Launch",
     title: "Poneglyph is now open: 156,000+ records, free to query",
-    excerpt: "We are thrilled to launch the Poneglyph humanitarian data commons, making thousands of incident reports available to researchers globally via our agentic terminal.",
+    excerpt:
+      "We are thrilled to launch the Poneglyph humanitarian data commons, making thousands of incident reports available to researchers globally via our agentic terminal.",
     date: "Mar 10, 2025",
     readTime: "4 min read",
     size: "large",
     image: "/images/blog/blog-seed-round.png",
-    imagePrompt: "A vibrant, minimalist illustration of interconnected nodes and networks glowing with purpose-driven energy. Features collaborative figures working together across digital bridges, symbolizing global coordination and humanitarian impact. Clean modern aesthetic with warm accent colors representing growth and connection.",
+    imagePrompt:
+      "A vibrant, minimalist illustration of interconnected nodes and networks glowing with purpose-driven energy. Features collaborative figures working together across digital bridges, symbolizing global coordination and humanitarian impact. Clean modern aesthetic with warm accent colors representing growth and connection.",
   },
   {
     slug: "how-ngos-contribute-data",
     tag: "Guide",
     title: "How NGOs can contribute data that actually gets used",
-    excerpt: "From formatting field reports to ensuring compliance — everything NGOs need to know before publishing their first dataset to the commons.",
+    excerpt:
+      "From formatting field reports to ensuring compliance — everything NGOs need to know before publishing their first dataset to the commons.",
     date: "Feb 24, 2025",
     readTime: "8 min read",
     size: "small",
     image: "/images/blog/blog-matching-guide.png",
-    imagePrompt: "A structured, educational visual showing a flowchart or roadmap with diverse volunteers connecting to opportunities. Clean iconography representing skills, matching, and growth. Organized, guide-like aesthetic with clear visual hierarchy and helpful design patterns.",
+    imagePrompt:
+      "A structured, educational visual showing a flowchart or roadmap with diverse volunteers connecting to opportunities. Clean iconography representing skills, matching, and growth. Organized, guide-like aesthetic with clear visual hierarchy and helpful design patterns.",
   },
   {
     slug: "ai-turns-field-reports-to-intelligence",
     tag: "Product",
     title: "How AI turns field reports into published intelligence",
-    excerpt: "Automated ingestion, cross-border correlation, and agentic research are changing what it means to analyze unstructured field data at scale.",
+    excerpt:
+      "Automated ingestion, cross-border correlation, and agentic research are changing what it means to analyze unstructured field data at scale.",
     date: "Feb 10, 2025",
     readTime: "5 min read",
     size: "small",
     image: "/images/blog/blog-ai-ngos.png",
-    imagePrompt: "Futuristic but warm illustration of AI-powered systems orchestrating volunteer coordination. Features neural networks, data flows, and human figures working with intelligent systems. Modern tech aesthetic balanced with humanity and purpose. Emphasizes scale, efficiency, and smart resource allocation.",
+    imagePrompt:
+      "Futuristic but warm illustration of AI-powered systems orchestrating volunteer coordination. Features neural networks, data flows, and human figures working with intelligent systems. Modern tech aesthetic balanced with humanity and purpose. Emphasizes scale, efficiency, and smart resource allocation.",
   },
   {
     slug: "trafficking-routes-no-one-was-tracking",
     tag: "Research",
     title: "The trafficking routes no one was tracking — until now",
-    excerpt: "Our autonomous agents analyzed 50,000+ scattered reports to uncover entirely new exploitation corridors in South-East Asia.",
+    excerpt:
+      "Our autonomous agents analyzed 50,000+ scattered reports to uncover entirely new exploitation corridors in South-East Asia.",
     date: "Jan 28, 2025",
     readTime: "6 min read",
     size: "medium",
     image: "/images/blog/blog-impact-metrics.png",
-    imagePrompt: "An informative visualization showing impact metrics, dashboards, and measurement tools in action. Includes graphs, analytics, and real-world outcomes being tracked. Beginner-friendly visual language with clear data representations. Emphasizes clarity, measurement, and tangible results.",
+    imagePrompt:
+      "An informative visualization showing impact metrics, dashboards, and measurement tools in action. Includes graphs, analytics, and real-world outcomes being tracked. Beginner-friendly visual language with clear data representations. Emphasizes clarity, measurement, and tangible results.",
   },
   {
     slug: "5-years-humanitarian-data-forced-labor",
     tag: "Analysis",
     title: "What 5 years of humanitarian data tells us about forced labor",
-    excerpt: "Accurate insights require accurate inputs. We synthesized half a decade of NGO submissions to identify persistent gaps in forced labor reporting.",
+    excerpt:
+      "Accurate insights require accurate inputs. We synthesized half a decade of NGO submissions to identify persistent gaps in forced labor reporting.",
     date: "Jan 15, 2025",
     readTime: "4 min read",
     size: "medium",
     image: "/images/blog/blog-volunteer-retention.png",
-    imagePrompt: "A warm, community-focused illustration showing long-term relationships and trust building between organizations and volunteers. Depicts retention, growth, and lasting commitment through visual metaphors like roots, foundations, or continuous journeys. Emphasizes community, trust, and sustainable engagement.",
+    imagePrompt:
+      "A warm, community-focused illustration showing long-term relationships and trust building between organizations and volunteers. Depicts retention, growth, and lasting commitment through visual metaphors like roots, foundations, or continuous journeys. Emphasizes community, trust, and sustainable engagement.",
   },
 ];
 
-function BlogCard({ post }: { post: typeof posts[0] }) {
+function BlogCard({ post }: { post: (typeof posts)[0] }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -112,24 +122,24 @@ export default function BlogPage() {
         </div>
       </section>
 
-       {/* ── Featured post ── */}
-       <section className="py-16 bg-white">
-         <div className="container-max">
-           <Link
-             href={`/blog/${featured.slug}`}
-             className="group flex flex-col md:flex-row gap-8 bg-white border border-grey-3 rounded-2xl overflow-hidden hover:border-grey-2 transition-colors"
-             title={`Image prompt: ${featured.imagePrompt}`}
-           >
-             <div className="md:w-1/2 aspect-video md:aspect-auto bg-grey-4 min-h-[240px] relative overflow-hidden">
-               <Image
-                 src={featured.image}
-                 alt={featured.title}
-                 fill
-                 className="object-cover group-hover:scale-105 transition-transform duration-500"
-                 sizes="(max-width: 768px) 100vw, 50vw"
-                 priority
-               />
-             </div>
+      {/* ── Featured post ── */}
+      <section className="py-16 bg-white">
+        <div className="container-max">
+          <Link
+            href={`/blog/${featured.slug}`}
+            className="group flex flex-col md:flex-row gap-8 bg-white border border-grey-3 rounded-2xl overflow-hidden hover:border-grey-2 transition-colors"
+            title={`Image prompt: ${featured.imagePrompt}`}
+          >
+            <div className="md:w-1/2 aspect-video md:aspect-auto bg-grey-4 min-h-[240px] relative overflow-hidden">
+              <Image
+                src={featured.image}
+                alt={featured.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            </div>
             <div className="flex flex-col justify-center gap-4 p-8">
               <span className="text-[10px] font-medium uppercase tracking-widest text-grey-1 bg-grey-4 px-2 py-1 rounded-full w-fit">
                 {featured.tag}
@@ -139,7 +149,9 @@ export default function BlogPage() {
               </h2>
               <p className="text-body text-grey-1">{featured.excerpt}</p>
               <div className="flex items-center gap-3 mt-2">
-                <span className="text-xs text-grey-2">{featured.date} · {featured.readTime}</span>
+                <span className="text-xs text-grey-2">
+                  {featured.date} · {featured.readTime}
+                </span>
                 <span className="flex items-center gap-1 text-sm font-medium text-black group-hover:gap-2 transition-all">
                   Read more <ArrowRight size={14} />
                 </span>

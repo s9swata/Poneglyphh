@@ -31,15 +31,7 @@ const socialLinks = [
   { icon: Mail, href: "mailto:wearemodula@gmail.com", label: "Email" },
 ];
 
-function FooterLinkItem({
-  label,
-  href,
-  badge,
-}: {
-  label: string;
-  href: string;
-  badge?: string;
-}) {
+function FooterLinkItem({ label, href, badge }: { label: string; href: string; badge?: string }) {
   return (
     <Link
       href={href}
@@ -62,9 +54,7 @@ export function Footer() {
         {/* Link columns */}
         <div className="grid grid-cols-3 gap-10 mb-16">
           <div className="flex flex-col gap-8">
-            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">
-              Product
-            </p>
+            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">Product</p>
             <div className="flex flex-col gap-3.5">
               {productLinks.map((l) => (
                 <FooterLinkItem key={l.label} {...l} />
@@ -72,9 +62,7 @@ export function Footer() {
             </div>
           </div>
           <div className="flex flex-col gap-8">
-            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">
-              Company
-            </p>
+            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">Company</p>
             <div className="flex flex-col gap-3.5">
               {companyLinks.map((l) => (
                 <FooterLinkItem key={l.label} {...l} />
@@ -82,9 +70,7 @@ export function Footer() {
             </div>
           </div>
           <div className="flex flex-col gap-8">
-            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">
-              Resources
-            </p>
+            <p className="text-sub font-medium uppercase tracking-widest text-grey-1">Resources</p>
             <div className="flex flex-col gap-3.5">
               {resourceLinks.map((l) => (
                 <FooterLinkItem key={l.label} {...l} />

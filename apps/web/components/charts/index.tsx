@@ -7,8 +7,6 @@
 
 "use client";
 
-import { useState } from "react";
-
 /* ─── Shared types ─── */
 export type ChartColor = "primary" | "black" | "blue" | "success" | "error" | "grey";
 
@@ -60,7 +58,7 @@ export function BarChart({
   const chartH = svgH - padB - padT;
   const barGroupW = (svgW - padL - 16) / data.length;
   const seriesCount = data[0]?.values.length ?? 1;
-  const barW = Math.min(18, (barGroupW / seriesCount) - 4);
+  const barW = Math.min(18, barGroupW / seriesCount - 4);
 
   const yLines = [0, 0.25, 0.5, 0.75, 1];
 
@@ -80,7 +78,8 @@ export function BarChart({
             <g key={t}>
               <line x1={padL} y1={y} x2={svgW - 8} y2={y} stroke="#E5E6E6" strokeWidth="1" />
               <text x={padL - 4} y={y + 3} textAnchor="end" fontSize="9" fill="#B3BDBD">
-                {Math.round(max * t)}{unit}
+                {Math.round(max * t)}
+                {unit}
               </text>
             </g>
           );
@@ -96,12 +95,7 @@ export function BarChart({
             const fill = COLOR_MAP[colors[si % colors.length]];
             return (
               <g key={`${gi}-${si}`}>
-                <rect
-                  x={x} y={y}
-                  width={barW} height={barH}
-                  fill={fill}
-                  rx="3"
-                />
+                <rect x={x} y={y} width={barW} height={barH} fill={fill} rx="3" />
               </g>
             );
           });
@@ -122,7 +116,10 @@ export function BarChart({
         <div className="flex items-center gap-4 flex-wrap">
           {legendLabels.map((l, i) => (
             <div key={l} className="flex items-center gap-1.5 text-[11px] text-grey-1">
-              <div className="w-2.5 h-2.5 rounded-sm" style={{ background: COLOR_MAP[colors[i % colors.length]] }} />
+              <div
+                className="w-2.5 h-2.5 rounded-sm"
+                style={{ background: COLOR_MAP[colors[i % colors.length]] }}
+              />
               {l}
             </div>
           ))}
@@ -158,7 +155,10 @@ export function HBarChart({ data, title, unit = "%", showValues = true }: HBarCh
           <div className="flex items-center justify-between">
             <span className="text-xs text-black">{d.label}</span>
             {showValues && (
-              <span className="text-xs font-medium text-black">{d.value}{unit}</span>
+              <span className="text-xs font-medium text-black">
+                {d.value}
+                {unit}
+              </span>
             )}
           </div>
           <div className="h-2.5 w-full bg-grey-4 rounded-full overflow-hidden">
@@ -236,7 +236,8 @@ export function LineChart({
             <g key={t}>
               <line x1={padL} y1={y} x2={svgW - padR} y2={y} stroke="#E5E6E6" strokeWidth="1" />
               <text x={padL - 4} y={y + 3} textAnchor="end" fontSize="9" fill="#B3BDBD">
-                {Math.round((max - min) * t + min)}{unit}
+                {Math.round((max - min) * t + min)}
+                {unit}
               </text>
             </g>
           );
@@ -256,13 +257,7 @@ export function LineChart({
           const areaBottom = `${xPos(n - 1)},${yPos(min)} ${xPos(0)},${yPos(min)}`;
           return (
             <g key={s.label}>
-              {s.filled && (
-                <polygon
-                  points={`${pts} ${areaBottom}`}
-                  fill={color}
-                  opacity="0.15"
-                />
-              )}
+              {s.filled && <polygon points={`${pts} ${areaBottom}`} fill={color} opacity="0.15" />}
               <polyline
                 points={pts}
                 fill="none"
@@ -338,15 +333,26 @@ export function DonutChart({
 
   return (
     <div className="flex flex-col gap-3 items-center w-full">
-      {title && <p className="text-xs font-medium text-grey-1 uppercase tracking-wide self-start">{title}</p>}
+      {title && (
+        <p className="text-xs font-medium text-grey-1 uppercase tracking-wide self-start">
+          {title}
+        </p>
+      )}
       <div className="relative" style={{ width: size, height: size }}>
-        <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+        <svg
+          viewBox={`0 0 ${size} ${size}`}
+          width={size}
+          height={size}
+          style={{ transform: "rotate(-90deg)" }}
+        >
           {/* Track */}
           <circle cx={cx} cy={cy} r={r} fill="none" stroke="#F2F3F3" strokeWidth={stroke} />
           {arcs.map((a, i) => (
             <circle
               key={i}
-              cx={cx} cy={cy} r={r}
+              cx={cx}
+              cy={cy}
+              r={r}
               fill="none"
               stroke={a.color}
               strokeWidth={stroke}
@@ -369,7 +375,10 @@ export function DonutChart({
           {segments.map((s) => (
             <div key={s.label} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: COLOR_MAP[s.color] }} />
+                <div
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{ background: COLOR_MAP[s.color] }}
+                />
                 <span className="text-xs text-grey-1">{s.label}</span>
               </div>
               <span className="text-xs font-medium text-black">
@@ -394,14 +403,24 @@ interface SparklineProps {
   filled?: boolean;
 }
 
-export function Sparkline({ values, color = "primary", width = 80, height = 32, filled = true }: SparklineProps) {
+export function Sparkline({
+  values,
+  color = "primary",
+  width = 80,
+  height = 32,
+  filled = true,
+}: SparklineProps) {
   const max = Math.max(...values, 1);
   const min = Math.min(...values, 0);
   const n = values.length;
   const c = COLOR_MAP[color];
 
-  function x(i: number) { return (i / (n - 1)) * width; }
-  function y(v: number) { return height - ((v - min) / (max - min || 1)) * height; }
+  function x(i: number) {
+    return (i / (n - 1)) * width;
+  }
+  function y(v: number) {
+    return height - ((v - min) / (max - min || 1)) * height;
+  }
 
   const pts = values.map((v, i) => `${x(i)},${y(v)}`).join(" ");
   const area = `${pts} ${x(n - 1)},${height} ${x(0)},${height}`;
@@ -434,7 +453,14 @@ interface SparkStatProps {
   deltaUp?: boolean;
 }
 
-export function SparkStat({ value, label, sparkValues, sparkColor = "primary", delta, deltaUp }: SparkStatProps) {
+export function SparkStat({
+  value,
+  label,
+  sparkValues,
+  sparkColor = "primary",
+  delta,
+  deltaUp,
+}: SparkStatProps) {
   return (
     <div className="flex flex-col gap-1 p-5 bg-white border border-grey-3 rounded-2xl">
       <div className="flex items-start justify-between">
@@ -455,7 +481,7 @@ export function SparkStat({ value, label, sparkValues, sparkColor = "primary", d
    7. HEATMAP (calendar-style grid)
 ═══════════════════════════════════════════════ */
 interface HeatmapProps {
-  data: number[][];  // rows × cols, values 0–1
+  data: number[][]; // rows × cols, values 0–1
   rowLabels?: string[];
   colLabels?: string[];
   color?: ChartColor;
@@ -465,7 +491,7 @@ interface HeatmapProps {
 export function Heatmap({ data, rowLabels, colLabels, color = "primary", title }: HeatmapProps) {
   const c = COLOR_MAP[color];
   const cellSize = 20;
-  const gap = 3;
+  const _gap = 3;
 
   return (
     <div className="flex flex-col gap-2 w-full overflow-x-auto">
@@ -474,14 +500,22 @@ export function Heatmap({ data, rowLabels, colLabels, color = "primary", title }
         {colLabels && (
           <div className="flex gap-[3px] ml-10">
             {colLabels.map((l) => (
-              <div key={l} style={{ width: cellSize }} className="text-center text-[8px] text-grey-2 truncate">{l}</div>
+              <div
+                key={l}
+                style={{ width: cellSize }}
+                className="text-center text-[8px] text-grey-2 truncate"
+              >
+                {l}
+              </div>
             ))}
           </div>
         )}
         {data.map((row, ri) => (
           <div key={ri} className="flex items-center gap-[3px]">
             {rowLabels && (
-              <span className="text-[9px] text-grey-2 w-9 text-right pr-1 shrink-0">{rowLabels[ri]}</span>
+              <span className="text-[9px] text-grey-2 w-9 text-right pr-1 shrink-0">
+                {rowLabels[ri]}
+              </span>
             )}
             {row.map((val, ci) => (
               <div
@@ -508,14 +542,20 @@ export function Heatmap({ data, rowLabels, colLabels, color = "primary", title }
    8. PROGRESS RING (single stat ring)
 ═══════════════════════════════════════════════ */
 interface ProgressRingProps {
-  value: number;        // 0–100
+  value: number; // 0–100
   size?: number;
   color?: ChartColor;
   label?: string;
   sub?: string;
 }
 
-export function ProgressRing({ value, size = 80, color = "primary", label, sub }: ProgressRingProps) {
+export function ProgressRing({
+  value,
+  size = 80,
+  color = "primary",
+  label,
+  sub,
+}: ProgressRingProps) {
   const r = (size - 10) / 2;
   const circ = 2 * Math.PI * r;
   const fill = (value / 100) * circ;
@@ -524,10 +564,17 @@ export function ProgressRing({ value, size = 80, color = "primary", label, sub }
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ transform: "rotate(-90deg)" }}>
+        <svg
+          width={size}
+          height={size}
+          viewBox={`0 0 ${size} ${size}`}
+          style={{ transform: "rotate(-90deg)" }}
+        >
           <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#F2F3F3" strokeWidth="8" />
           <circle
-            cx={size / 2} cy={size / 2} r={r}
+            cx={size / 2}
+            cy={size / 2}
+            r={r}
             fill="none"
             stroke={c}
             strokeWidth="8"
@@ -606,7 +653,9 @@ interface ChartCardProps {
 
 export function ChartCard({ title, subtitle, badge, children, className = "" }: ChartCardProps) {
   return (
-    <div className={`bg-white border border-grey-3 rounded-2xl p-5 flex flex-col gap-5 ${className}`}>
+    <div
+      className={`bg-white border border-grey-3 rounded-2xl p-5 flex flex-col gap-5 ${className}`}
+    >
       <div className="flex items-start justify-between">
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
@@ -688,13 +737,11 @@ export function ScatterPlot({ points, height = 200, title, xLabel, yLabel }: Sca
           const r = p.size ?? 5;
           return (
             <g key={i}>
-              <circle
-                cx={cx} cy={cy} r={r}
-                fill={COLOR_MAP[p.color ?? "primary"]}
-                opacity="0.85"
-              />
+              <circle cx={cx} cy={cy} r={r} fill={COLOR_MAP[p.color ?? "primary"]} opacity="0.85" />
               {p.label && (
-                <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize="8" fill="#415762">{p.label}</text>
+                <text x={cx} y={cy - r - 3} textAnchor="middle" fontSize="8" fill="#415762">
+                  {p.label}
+                </text>
               )}
             </g>
           );

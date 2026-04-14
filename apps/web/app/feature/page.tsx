@@ -7,7 +7,8 @@ const features = [
   {
     icon: Zap,
     title: "AI Volunteer Matching",
-    description: "Automatically match volunteers to NGO projects based on skills, availability, location, and impact fit. Cut coordination time by up to 70%.",
+    description:
+      "Automatically match volunteers to NGO projects based on skills, availability, location, and impact fit. Cut coordination time by up to 70%.",
     details: [
       "Skill graph analysis",
       "Availability heatmap matching",
@@ -18,7 +19,8 @@ const features = [
   {
     icon: Users,
     title: "Multi-NGO Coordination",
-    description: "Share volunteer pools across partner organizations. Coordinate joint programs without duplicating effort or losing data.",
+    description:
+      "Share volunteer pools across partner organizations. Coordinate joint programs without duplicating effort or losing data.",
     details: [
       "Cross-organization visibility",
       "Shared volunteer profiles",
@@ -29,7 +31,8 @@ const features = [
   {
     icon: FileText,
     title: "Volunteer Data Management",
-    description: "Volunteers upload skills, certifications, and availability. NGOs see a structured, searchable profile — no more emailed CVs.",
+    description:
+      "Volunteers upload skills, certifications, and availability. NGOs see a structured, searchable profile — no more emailed CVs.",
     details: [
       "Structured skill profiles",
       "Certification verification",
@@ -40,7 +43,8 @@ const features = [
   {
     icon: BarChart3,
     title: "Impact Analytics",
-    description: "Real-time dashboards show volunteer hours, regional coverage, program outcomes, and resource gaps — all in one view.",
+    description:
+      "Real-time dashboards show volunteer hours, regional coverage, program outcomes, and resource gaps — all in one view.",
     details: [
       "Live impact metrics",
       "Regional heatmaps",
@@ -51,7 +55,8 @@ const features = [
   {
     icon: Target,
     title: "AI Research Agents",
-    description: "Sub-agents continuously analyze uploaded data, surface insights, flag under-resourced programs, and recommend reallocation actions.",
+    description:
+      "Sub-agents continuously analyze uploaded data, surface insights, flag under-resourced programs, and recommend reallocation actions.",
     details: [
       "Automated gap detection",
       "Resource allocation suggestions",
@@ -62,7 +67,8 @@ const features = [
   {
     icon: BookOpen,
     title: "Volunteer Onboarding",
-    description: "Guided onboarding flows get volunteers mission-ready fast — with role-specific training paths and task briefings built in.",
+    description:
+      "Guided onboarding flows get volunteers mission-ready fast — with role-specific training paths and task briefings built in.",
     details: [
       "Custom onboarding flows",
       "Skill gap assessments",
@@ -80,12 +86,15 @@ export default function FeaturePage() {
       <section className="relative py-32 overflow-hidden">
         <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
         <div className="container-max flex flex-col items-center gap-6 text-center relative z-10">
-          <p className="text-sub font-medium uppercase tracking-widest text-grey-1">for volunteers</p>
+          <p className="text-sub font-medium uppercase tracking-widest text-grey-1">
+            for volunteers
+          </p>
           <h1 className="text-[clamp(40px,6vw,64px)] font-medium leading-tight tracking-tight text-black max-w-2xl">
             Everything you need to find your mission and make it count
           </h1>
           <p className="text-body text-grey-1 max-w-md">
-            From profile creation to impact reporting — Poneglyph handles the full volunteer lifecycle in one place.
+            From profile creation to impact reporting — Poneglyph handles the full volunteer
+            lifecycle in one place.
           </p>
           <div className="flex items-center gap-3">
             <Link
@@ -137,7 +146,9 @@ export default function FeaturePage() {
         <div className="max-w-container mx-auto">
           <div className="relative bg-black rounded-2xl px-8 py-20 flex flex-col items-center gap-8 overflow-hidden text-center">
             <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
-            <p className="text-sub font-medium uppercase tracking-widest text-grey-2 relative z-10">get started</p>
+            <p className="text-sub font-medium uppercase tracking-widest text-grey-2 relative z-10">
+              get started
+            </p>
             <h2 className="text-[clamp(36px,5vw,60px)] font-medium leading-tight tracking-tight text-white relative z-10 max-w-xl">
               See Poneglyph in action
             </h2>

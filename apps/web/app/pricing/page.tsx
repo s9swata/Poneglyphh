@@ -34,7 +34,9 @@ export default function PricingPage() {
         <div className="container-max flex flex-col gap-12">
           <div className="flex flex-col items-center gap-4 text-center">
             <p className="text-sub font-medium uppercase tracking-widest text-grey-1">faqs</p>
-            <h2 className="text-[clamp(28px,4vw,40px)] font-medium leading-tight tracking-tight text-black">Common questions</h2>
+            <h2 className="text-[clamp(28px,4vw,40px)] font-medium leading-tight tracking-tight text-black">
+              Common questions
+            </h2>
           </div>
           <PricingFAQ />
         </div>
@@ -45,11 +47,16 @@ export default function PricingPage() {
         <div className="max-w-container mx-auto">
           <div className="relative bg-black rounded-2xl px-8 py-20 flex flex-col items-center gap-8 overflow-hidden text-center">
             <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
-            <p className="text-sub font-medium uppercase tracking-widest text-grey-2 relative z-10">get started today</p>
+            <p className="text-sub font-medium uppercase tracking-widest text-grey-2 relative z-10">
+              get started today
+            </p>
             <h2 className="text-[clamp(36px,5vw,60px)] font-medium leading-tight tracking-tight text-white relative z-10 max-w-xl">
               Turn field data into global intelligence. Start free.
             </h2>
-            <Link href="/contact" className="flex items-center gap-2 px-5 py-2.5 bg-primary text-black font-medium rounded-xl hover:bg-primary/80 transition-colors relative z-10">
+            <Link
+              href="/contact"
+              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-black font-medium rounded-xl hover:bg-primary/80 transition-colors relative z-10"
+            >
               Get early access <ArrowRight size={16} />
             </Link>
           </div>

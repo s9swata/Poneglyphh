@@ -3,14 +3,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Poneglyph — Smart Resource Allocation",
-  description: "Poneglyph connects NGOs with volunteers through AI-powered resource allocation. Real-time data, intelligent matching, and actionable insights.",
+  description:
+    "Poneglyph connects NGOs with volunteers through AI-powered resource allocation. Real-time data, intelligent matching, and actionable insights.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -21,9 +18,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-onest antialiased">
-        {children}
-      </body>
+      <body className="font-onest antialiased">{children}</body>
     </html>
   );
 }

@@ -1,12 +1,8 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
-  content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-  ],
+  darkMode: "class",
+  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -33,9 +29,9 @@ const config: Config = {
         "heading-6": ["20px", { lineHeight: "1.3em" }],
         "body-lg": ["20px", { lineHeight: "1.4em" }],
         "body-md": ["18px", { lineHeight: "1.55em" }],
-        "body": ["16px", { lineHeight: "1.45em" }],
+        body: ["16px", { lineHeight: "1.45em" }],
         "body-sm": ["14px", { lineHeight: "1.5em" }],
-        "sub": ["12px", { lineHeight: "12px", letterSpacing: "0.06em" }],
+        sub: ["12px", { lineHeight: "12px", letterSpacing: "0.06em" }],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -46,7 +42,7 @@ const config: Config = {
         container: "1200px",
       },
       animation: {
-        "ticker": "ticker 20s linear infinite",
+        ticker: "ticker 20s linear infinite",
         "ticker-reverse": "ticker-reverse 20s linear infinite",
       },
       keyframes: {

@@ -18,16 +18,16 @@ export function IntelligenceReports() {
         { label: "Digital", values: [85] },
         { label: "Smuggling", values: [30] },
       ],
-      linkText: "Read intelligence brief"
+      linkText: "Read intelligence brief",
     },
     {
       title: "Child Exploitation Statistics",
       desc: "A 40% rise in online predation incidents reported by global task forces this quarter. Heatmap data shows coordinated network activity.",
       chartType: "line",
       data: [
-        { label: "Incidents", color: "error", filled: true, values: [30, 45, 60, 50, 70, 85] }
+        { label: "Incidents", color: "error", filled: true, values: [30, 45, 60, 50, 70, 85] },
       ],
-      linkText: "View incident report"
+      linkText: "View incident report",
     },
     {
       title: "Forced Labor by Sub-sector",
@@ -36,9 +36,9 @@ export function IntelligenceReports() {
       data: [
         { label: "Agriculture", value: 40, color: "success" },
         { label: "Tech", value: 35, color: "black" },
-        { label: "Textiles", value: 25, color: "primary" }
+        { label: "Textiles", value: 25, color: "primary" },
       ],
-      linkText: "Access supply-chain data"
+      linkText: "Access supply-chain data",
     },
     {
       title: "Organized Crime Funds Tracking",
@@ -46,10 +46,10 @@ export function IntelligenceReports() {
       chartType: "bar",
       data: [
         { label: "Laundered", values: [80] },
-        { label: "Seized", values: [20] }
+        { label: "Seized", values: [20] },
       ],
-      linkText: "Analyze financial flows"
-    }
+      linkText: "Analyze financial flows",
+    },
   ];
 
   const nextSlide = () => setIndex((prev) => (prev + 1) % articles.length);
@@ -57,12 +57,15 @@ export function IntelligenceReports() {
 
   return (
     <div className="w-full flex flex-col items-center justify-center py-6">
-      <div className="relative w-[90vw] md:w-[60vw] max-w-[800px] h-[380px] md:h-[320px]" style={{ perspective: 1200 }}>
+      <div
+        className="relative w-[90vw] md:w-[60vw] max-w-[800px] h-[380px] md:h-[320px]"
+        style={{ perspective: 1200 }}
+      >
         <AnimatePresence initial={false}>
           {articles.map((article, i) => {
             const offset = (i - index + articles.length) % articles.length;
             const isVisible = offset <= 2;
-            
+
             return (
               <motion.div
                 key={article.title}
@@ -75,7 +78,7 @@ export function IntelligenceReports() {
                   rotateY: isVisible ? offset * -8 : -15,
                   scale: 1,
                   zIndex: articles.length - offset,
-                  pointerEvents: offset === 0 ? "auto" : "none"
+                  pointerEvents: offset === 0 ? "auto" : "none",
                 }}
                 transition={{ duration: 0.5, type: "spring", bounce: 0.1, stiffness: 100 }}
                 className="absolute inset-0 border border-grey-3 rounded-2xl bg-white overflow-hidden flex flex-col md:flex-row shadow-[0_10px_40px_-15px_rgba(0,0,0,0.15)]"
@@ -84,12 +87,20 @@ export function IntelligenceReports() {
                 <div className="p-8 flex-1 flex flex-col gap-3 items-center justify-center border-b md:border-b-0 md:border-r border-grey-3 bg-grey-4/30 md:w-1/2">
                   {article.chartType === "bar" && (
                     <div className="w-full">
-                      <BarChart data={article.data as BarDatum[]} height={180} colors={["primary"]} />
+                      <BarChart
+                        data={article.data as BarDatum[]}
+                        height={180}
+                        colors={["primary"]}
+                      />
                     </div>
                   )}
                   {article.chartType === "line" && (
                     <div className="w-full">
-                      <LineChart series={article.data as LineSeries[]} xLabels={["Q1","Q2","Q3","Q4","Q5","Q6"]} height={180} />
+                      <LineChart
+                        series={article.data as LineSeries[]}
+                        xLabels={["Q1", "Q2", "Q3", "Q4", "Q5", "Q6"]}
+                        height={180}
+                      />
                     </div>
                   )}
                   {article.chartType === "donut" && (
@@ -99,9 +110,16 @@ export function IntelligenceReports() {
                   )}
                 </div>
                 <div className="p-8 flex-1 flex flex-col gap-4 justify-center md:w-1/2 bg-white">
-                  <h3 className="text-[20px] md:text-[24px] font-medium text-black leading-snug">{article.title}</h3>
-                  <p className="text-[14px] md:text-[15px] text-grey-1 line-clamp-3 leading-relaxed">{article.desc}</p>
-                  <a href="#" className="mt-2 flex items-center gap-1.5 text-sm font-medium text-black hover:text-grey-1 transition-colors">
+                  <h3 className="text-[20px] md:text-[24px] font-medium text-black leading-snug">
+                    {article.title}
+                  </h3>
+                  <p className="text-[14px] md:text-[15px] text-grey-1 line-clamp-3 leading-relaxed">
+                    {article.desc}
+                  </p>
+                  <a
+                    href="#"
+                    className="mt-2 flex items-center gap-1.5 text-sm font-medium text-black hover:text-grey-1 transition-colors"
+                  >
                     {article.linkText} <ArrowRight size={14} />
                   </a>
                 </div>
