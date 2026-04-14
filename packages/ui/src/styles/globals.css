@@ -13,8 +13,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: #E3FF8F;
+  --primary-foreground: #22242A;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -48,8 +48,8 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.87 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: #E3FF8F;
+  --primary-foreground: #22242A;
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -77,6 +77,72 @@
 
 @theme inline {
   --font-sans: "Inter Variable", sans-serif;
+  --font-onest: "Onest", sans-serif;
+
+  /* Typography */
+  --text-heading-1: 70px;
+  --text-heading-1--line-height: 1em;
+  --text-heading-1--letter-spacing: -0.03em;
+  
+  --text-heading-2: 60px;
+  --text-heading-2--line-height: 1em;
+  --text-heading-2--letter-spacing: -0.02em;
+
+  --text-heading-3: 48px;
+  --text-heading-3--line-height: 1.05em;
+  --text-heading-3--letter-spacing: -0.02em;
+
+  --text-heading-4: 36px;
+  --text-heading-4--line-height: 1.1em;
+  --text-heading-4--letter-spacing: -0.02em;
+
+  --text-heading-5: 28px;
+  --text-heading-5--line-height: 1.3em;
+  --text-heading-5--letter-spacing: -0.01em;
+
+  --text-heading-6: 20px;
+  --text-heading-6--line-height: 1.3em;
+
+  --text-body-lg: 20px;
+  --text-body-lg--line-height: 1.4em;
+
+  --text-body-md: 18px;
+  --text-body-md--line-height: 1.55em;
+
+  --text-body: 16px;
+  --text-body--line-height: 1.45em;
+
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 1.5em;
+
+  --text-sub: 12px;
+  --text-sub--line-height: 12px;
+  --text-sub--letter-spacing: 0.06em;
+
+  /* Colors */
+  --color-black: #22242A;
+  --color-grey-1: #415762;
+  --color-grey-2: #B3BDBD;
+  --color-grey-3: #E5E6E6;
+  --color-grey-35: #F2F3F3;
+  --color-grey-4: #F7F8F8;
+  --color-error: #EE4444;
+  --color-success: #37955B;
+  --color-blue: #25C5FA;
+
+  /* Animations */
+  --animate-ticker: ticker 20s linear infinite;
+  --animate-ticker-reverse: ticker-reverse 20s linear infinite;
+  
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes ticker-reverse {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

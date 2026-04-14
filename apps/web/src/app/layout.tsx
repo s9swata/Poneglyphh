@@ -1,39 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-
-import "../index.css";
-import Header from "@/components/header";
+import { Onest } from "next/font/google";
+import "./globals.css";
 import Providers from "@/components/providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const onest = Onest({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-onest",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Poneglyph",
-  description: "Poneglyph",
+  title: "Poneglyph — Smart Resource Allocation",
+  description:
+    "Poneglyph connects NGOs with volunteers through AI-powered resource allocation. Real-time data, intelligent matching, and actionable insights.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          <div className="grid grid-rows-[auto_1fr] h-svh">
-            <Header />
-            {children}
-          </div>
-        </Providers>
+      <body className={`${onest.variable} font-onest antialiased`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
