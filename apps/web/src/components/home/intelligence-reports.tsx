@@ -98,7 +98,7 @@ export function IntelligenceReports() {
                 className="absolute inset-0 border border-grey-3 rounded-2xl bg-white overflow-hidden flex flex-col md:flex-row shadow-[0_10px_40px_-15px_rgba(0,0,0,0.15)]"
                 style={{ originX: 0, originY: 0.5, transformStyle: "preserve-3d" }}
               >
-                <div className="p-8 flex-1 flex flex-col gap-3 items-center justify-center border-b md:border-b-0 md:border-r border-grey-3 bg-grey-4/30 md:w-1/2">
+                <div className="p-8 flex-1 flex flex-col gap-3 items-center justify-center border-b md:border-b-0 md:border-r border-grey-3 bg-grey-4 md:w-1/2">
                   {article.chartType === "bar" && (
                     <div className="w-full">
                       <BarChart

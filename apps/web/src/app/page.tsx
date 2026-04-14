@@ -174,7 +174,7 @@ export default function HomePage() {
       </section>
 
       {/* ══ AI ANALYSIS ══ */}
-      <section className="py-24 bg-grey-4/30">
+      <section className="py-24 bg-grey-4">
         <div className="container-max flex flex-col items-center gap-12">
           <div className="flex flex-col items-center gap-3 text-center max-w-xl">
             <h2 className="text-[clamp(28px,4vw,44px)] font-medium tracking-tight text-black">
