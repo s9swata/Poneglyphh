@@ -48,7 +48,6 @@ export default function StartHerePage() {
       <Navigation />
       {/* ── Hero ── */}
       <section className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
         <div className="container-max flex flex-col items-center gap-6 text-center relative z-10">
           <p className="text-sub font-medium uppercase tracking-widest text-grey-1">start here</p>
           <h1 className="text-[clamp(40px,6vw,64px)] font-medium leading-tight tracking-tight text-black max-w-xl">

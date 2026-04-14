@@ -72,7 +72,6 @@ export default function SolutionsPage() {
       <Navigation />
       {/* ── Hero ── */}
       <section className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
         <div className="container-max flex flex-col items-center gap-6 text-center relative z-10">
           <p className="text-sub font-medium uppercase tracking-widest text-grey-1">solutions</p>
           <h1 className="text-[clamp(40px,6vw,64px)] font-medium leading-tight tracking-tight text-black max-w-2xl">
@@ -143,7 +142,6 @@ export default function SolutionsPage() {
       <section className="py-24 px-4">
         <div className="max-w-container mx-auto">
           <div className="relative bg-black rounded-2xl px-8 py-20 flex flex-col items-center gap-8 overflow-hidden text-center">
-            <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
             <p className="text-sub font-medium uppercase tracking-widest text-grey-2 relative z-10">
               ready to start?
             </p>
