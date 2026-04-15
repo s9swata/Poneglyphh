@@ -24,6 +24,7 @@ export const datasetStatusEnum = pgEnum("dataset_status", [
   "pending",
   "approved",
   "rejected",
+  "archived",
 ]);
 
 export const fileTypeEnum = pgEnum("file_type", [
@@ -58,6 +59,8 @@ export const datasets = pgTable(
   "datasets",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+
+    externalId: text("external_id").unique(), // CKAN/source package ID for dedup
 
     sourceId: uuid("source_id")
       .notNull()
@@ -120,6 +123,28 @@ export const datasetTags = pgTable(
     ),
   ],
 );
+
+export const syncStatusEnum = pgEnum("sync_status", [
+  "running",
+  "completed",
+  "failed",
+]);
+
+export const syncLogs = pgTable("sync_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  sourceId: uuid("source_id")
+    .notNull()
+    .references(() => sources.id, { onDelete: "cascade" }),
+  syncStatus: syncStatusEnum("sync_status").default("running").notNull(),
+  totalFound: integer("total_found").default(0).notNull(),
+  added: integer("added").default(0).notNull(),
+  updated: integer("updated").default(0).notNull(),
+  archived: integer("archived").default(0).notNull(),
+  errorCount: integer("error_count").default(0).notNull(),
+  startedAt: timestamp("started_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+  error: text("error"),
+});
 
 export const sourcesRelations = relations(sources, ({ one, many }) => ({
   user: one(user, {

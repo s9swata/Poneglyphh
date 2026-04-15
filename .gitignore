@@ -40,6 +40,7 @@ lerna-debug.log*
 # Better-T-Stack
 .alchemy
 .agents/skills/
+.claude/skills/
 opencode.json
 skills-lock.json
 
