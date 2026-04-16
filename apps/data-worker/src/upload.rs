@@ -362,10 +362,17 @@ async fn upload_to_gemini_file_api(
         anyhow::bail!("Gemini File API PUT returned {}: {}", put_status, body);
     }
 
-    // Step 3: Parse the response body for file info (name + uri)
+    // Step 3: Parse the response body for file info.
+    // IMPORTANT: The Gemini API returns file metadata NESTED under a "file" object.
+    // Example response: { "file": { "name": "files/abc", "uri": "https://...", "state": "ACTIVE" } }
+    // This is different from the poll response which has fields at root level!
     #[derive(Deserialize)]
     struct FileInfo {
-        #[allow(dead_code)]
+        file: FileData,
+    }
+
+    #[derive(Deserialize)]
+    struct FileData {
         name: String,
         #[allow(dead_code)]
         uri: String,
@@ -379,8 +386,16 @@ async fn upload_to_gemini_file_api(
         .await
         .context("Gemini File API: failed to parse file info response")?;
 
-    // Poll until file is ACTIVE (Gemini processes PDFs asynchronously)
-    let uri = poll_file_until_active(&HTTP, API_BASE, api_key, &file_info.name).await?;
+    // Gemini processes small files synchronously - if state is already ACTIVE,
+    // we can skip the polling step entirely and return the URI immediately.
+    // This avoids unnecessary API calls and potential rate limiting.
+    if file_info.file.state == "ACTIVE" {
+        tracing::debug!("Gemini File API: file is ACTIVE, skipping poll");
+        return Ok(file_info.file.uri);
+    }
+
+    // Poll until file is ACTIVE (for larger files that need async processing)
+    let uri = poll_file_until_active(&HTTP, API_BASE, api_key, &file_info.file.name).await?;
 
     tracing::debug!("Gemini File API: file ACTIVE at {}", uri);
     Ok(uri)
