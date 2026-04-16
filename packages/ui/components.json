@@ -10,7 +10,7 @@
     "cssVariables": true,
     "prefix": ""
   },
-  "iconLibrary": "lucide",
+  "iconLibrary": "tabler",
   "aliases": {
     "components": "@Poneglyph/ui/components",
     "utils": "@Poneglyph/ui/lib/utils",
@@ -18,7 +18,8 @@
     "lib": "@Poneglyph/ui/lib",
     "ui": "@Poneglyph/ui/components"
   },
-  "menuColor": "default",
+  "menuColor": "inverted-translucent",
   "menuAccent": "subtle",
-  "registries": {}
+  "registries": {},
+  "rtl": false
 }

@@ -1,39 +1,46 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Newsreader, JetBrains_Mono, Geist, Space_Grotesk } from "next/font/google";
+import "./globals.css";
+import { cn } from "@Poneglyph/ui/lib/utils";
 
-import "../index.css";
-import Header from "@/components/header";
-import Providers from "@/components/providers";
+const spaceGroteskHeading = Space_Grotesk({subsets:['latin'],variable:'--font-heading'});
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
+const outfit = Outfit({
   subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const newsreader = Newsreader({
   subsets: ["latin"],
+  variable: "--font-newsreader",
+  display: "swap",
+  style: ["normal", "italic"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Poneglyph",
-  description: "Poneglyph",
+  title: "Poneglyph — Data Stories Vividly Visualized",
+  description:
+    "AI-powered analysis and extracted insights from survey datasets worldwide.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          <div className="grid grid-rows-[auto_1fr] h-svh">
-            <Header />
-            {children}
-          </div>
-        </Providers>
+    <html lang="en" className={cn("font-sans", geist.variable, spaceGroteskHeading.variable)}>
+      <body className={`${outfit.variable} ${newsreader.variable} ${jetbrainsMono.variable} font-sans antialiased bg-background text-foreground`}>
+        {children}
       </body>
     </html>
   );
