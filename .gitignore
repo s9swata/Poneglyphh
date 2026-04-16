@@ -57,3 +57,6 @@ temp
 # Reference directory
 raw/
 web_backup_temp/
+
+# Worktree directories
+crazy-ui/
