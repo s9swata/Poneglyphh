@@ -52,7 +52,18 @@ export function DatasetSearchBar({ initialQuery = "" }: DatasetSearchBarProps) {
     }, 400);
   };
 
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
+
   const handleClear = () => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
     setQuery("");
     updateUrl("");
   };

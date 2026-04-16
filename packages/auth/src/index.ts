@@ -15,7 +15,7 @@ export function createAuth() {
 
       schema: schema,
     }),
-    trustedOrigins: [env.CORS_ORIGINS],
+    trustedOrigins: env.CORS_ORIGINS.split(",").map((o) => o.trim()),
     emailAndPassword: {
       enabled: true,
     },

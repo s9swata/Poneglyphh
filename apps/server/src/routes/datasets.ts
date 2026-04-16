@@ -53,8 +53,8 @@ export const datasetsRoute = app.get(
       conditions.push(arrayContains(datasets.fileTypes, [query.fileType]));
     }
 
-    // Filter by tags: find all dataset IDs that have every requested tag slug,
-    // then restrict the main query to that set via inArray.
+    // Filter by tags: find all dataset IDs that have ALL requested tag slugs.
+    // The query uses a HAVING clause to ensure every tag is present.
     if (query.tags && query.tags.length > 0) {
       const matchingTagRows = await db
         .select({ datasetId: datasetTags.datasetId })
@@ -62,9 +62,15 @@ export const datasetsRoute = app.get(
         .innerJoin(tags, eq(datasetTags.tagId, tags.id))
         .where(inArray(tags.slug, query.tags));
 
-      const datasetIds = [...new Set(matchingTagRows.map((r) => r.datasetId))];
+      const tagCounts = new Map<string, number>();
+      for (const row of matchingTagRows) {
+        tagCounts.set(row.datasetId, (tagCounts.get(row.datasetId) || 0) + 1);
+      }
 
-      // If no datasets carry any of the requested tags, return empty immediately
+      const datasetIds = [...new Set(matchingTagRows.map((r) => r.datasetId))].filter(
+        (id) => (tagCounts.get(id) || 0) >= (query.tags?.length ?? 0)
+      );
+
       if (datasetIds.length === 0) {
         return c.json({ data: [], total: 0, page, limit, totalPages: 0 }, 200);
       }
