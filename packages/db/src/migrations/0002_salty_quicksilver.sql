@@ -1,0 +1,1 @@
+ALTER TABLE "datasets" ALTER COLUMN "publisher" SET DATA TYPE varchar(255);

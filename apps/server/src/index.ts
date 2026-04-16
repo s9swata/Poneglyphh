@@ -20,7 +20,16 @@ app.use(
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
 
 app.get("/", (c) => {
-  return c.text("OK");
+  c.header("Content-Type", "text/plain");
+  return c.text("OK from Agasta");
 });
+
+app.get("/health", (c) =>
+  c.json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    version: "1.0.0",
+  }),
+);
 
 export default app;

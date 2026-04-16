@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "dataset_tags_dataset_id_tag_id_unique" ON "dataset_tags" USING btree ("dataset_id","tag_id");
