@@ -4,6 +4,8 @@ import { z } from "zod";
 import { uploadFile, getPresignedUrl } from "../lib/s3";
 import { publishUploadMessage } from "../lib/queue";
 
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
 const upload = new Hono();
 
 // File type → mime type mapping matching the DB file_type enum
@@ -68,12 +70,29 @@ upload.post("/", async (c) => {
     return c.json({ error: "At least one file is required" }, 400);
   }
 
+  // TODO: When switching to presigned URLs (Zero Wait approach), I will remove this guard.
+  // Currently using arrayBuffer() which holds entire file in memory - size guard
+  // prevents OOM. With presigned URLs, client uploads directly to R2.
+  //
+  // Issue: https://github.com/Itz-Agasta/Poneglyph/issues/8
+  for (const file of fileEntries) {
+    if (file.size > MAX_FILE_SIZE) {
+      return c.json(
+        {
+          error: `File ${file.name} is too large. Max limit is ${MAX_FILE_SIZE / 1024 / 1024}MB.`,
+        },
+        413,
+      );
+    }
+  }
+
   const uploadId = crypto.randomUUID();
 
   // Parallel upload all attachments to R2
   const attachmentPromises = fileEntries.map(async (file) => {
     const ext = file.name.split(".").pop() ?? "bin";
     const key = `uploads/${uploadId}/${crypto.randomUUID()}.${ext}`;
+    // TODO: Replace with presigned URLs - client uploads directly to R2 (Zero Wait)
     const buffer = await file.arrayBuffer();
 
     await uploadFile(key, buffer, file.type || "application/octet-stream");
@@ -87,20 +106,23 @@ upload.post("/", async (c) => {
     };
   });
 
-  // TODO: Handle partial failures (e.g., 4/5 files uploaded successfully)
-  // I havent thought about it yet
-  const attachments = await Promise.all(attachmentPromises);
-
-  // Upload optional thumbnail in parallel with attachments
-  let thumbnailS3Key: string | undefined;
+  // Upload thumbnail in parallel with attachments
   const thumbnailFile = formData.get("thumbnail") as File | null;
-  if (thumbnailFile) {
-    const thumbExt = thumbnailFile.name.split(".").pop() ?? "bin";
-    const thumbKey = `uploads/${uploadId}/thumbnail.${thumbExt}`;
-    const thumbBuffer = await thumbnailFile.arrayBuffer();
-    await uploadFile(thumbKey, thumbBuffer, thumbnailFile.type || "image/*");
-    thumbnailS3Key = thumbKey;
-  }
+  const thumbnailPromise = thumbnailFile
+    ? (async () => {
+        const thumbExt = thumbnailFile.name.split(".").pop() ?? "bin";
+        const thumbKey = `uploads/${uploadId}/thumbnail.${thumbExt}`;
+        // TODO: Replace with presigned URLs - client uploads directly to R2 (Zero Wait)
+        const thumbBuffer = await thumbnailFile.arrayBuffer();
+        await uploadFile(thumbKey, thumbBuffer, thumbnailFile.type || "image/*");
+        return thumbKey;
+      })()
+    : Promise.resolve(undefined);
+
+  const [attachments, thumbnailS3Key] = await Promise.all([
+    Promise.all(attachmentPromises),
+    thumbnailPromise,
+  ]);
 
   // Publish to RabbitMQ — worker handles everything from here
   await publishUploadMessage({
