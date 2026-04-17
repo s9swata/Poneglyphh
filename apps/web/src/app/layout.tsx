@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit, Newsreader, JetBrains_Mono, Geist, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { cn } from "@Poneglyph/ui/lib/utils";
+import { Navigation } from "@/components/navigation";
 
 const spaceGroteskHeading = Space_Grotesk({subsets:['latin'],variable:'--font-heading'});
 
@@ -40,6 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable, spaceGroteskHeading.variable)}>
       <body className={`${outfit.variable} ${newsreader.variable} ${jetbrainsMono.variable} font-sans antialiased bg-background text-foreground`}>
+        <Navigation />
         {children}
       </body>
     </html>

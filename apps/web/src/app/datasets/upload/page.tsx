@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import {
   UploadCloud,
@@ -15,7 +14,6 @@ import {
   Bookmark,
   Share2,
   Plus,
-  ChevronLeft,
   Sparkles,
   Users,
   Database,
@@ -25,19 +23,6 @@ import { Input } from "@Poneglyph/ui/components/input";
 import { Label } from "@Poneglyph/ui/components/label";
 
 type UploadStatus = "idle" | "uploading" | "success" | "error";
-
-function PoneglyphLogo() {
-  return (
-    <div className="w-7 h-7 bg-black rounded-md flex items-center justify-center shrink-0">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <rect x="1" y="1" width="5" height="5" rx="0.5" fill="white" />
-        <rect x="8" y="1" width="5" height="5" rx="0.5" fill="white" />
-        <rect x="1" y="8" width="5" height="5" rx="0.5" fill="white" />
-        <rect x="8" y="8" width="5" height="5" rx="0.5" fill="white" />
-      </svg>
-    </div>
-  );
-}
 
 function DatasetPreviewCard({
   title,
@@ -64,7 +49,12 @@ function DatasetPreviewCard({
       {/* Post header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-grey-3">
         <div className="w-9 h-9 rounded-full bg-black flex items-center justify-center shrink-0">
-          <PoneglyphLogo />
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="1" y="1" width="5" height="5" rx="0.5" fill="white" />
+            <rect x="8" y="1" width="5" height="5" rx="0.5" fill="white" />
+            <rect x="1" y="8" width="5" height="5" rx="0.5" fill="white" />
+            <rect x="8" y="8" width="5" height="5" rx="0.5" fill="white" />
+          </svg>
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-black leading-tight truncate">
@@ -211,36 +201,6 @@ export default function DatasetUploadPage() {
 
   return (
     <div className="min-h-screen bg-grey-4 flex flex-col">
-      {/* Navbar */}
-      <header className="sticky top-0 z-50 bg-white border-b border-grey-3">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2 font-onest font-semibold text-black text-sm"
-          >
-            <PoneglyphLogo />
-            Poneglyph
-          </Link>
-          <span className="text-xs font-medium text-grey-1 hidden sm:block">
-            Share a Dataset
-          </span>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/datasets"
-              className="text-sm font-medium text-grey-1 hover:text-black transition-colors"
-            >
-              Explore
-            </Link>
-            <Link
-              href="/login"
-              className="px-4 py-1.5 text-sm font-medium text-black bg-primary rounded-xl hover:bg-primary/80 transition-colors"
-            >
-              Sign in
-            </Link>
-          </div>
-        </div>
-      </header>
-
       {/* Encouragement banner */}
       <div className="bg-black text-white py-3 px-4">
         <div className="max-w-6xl mx-auto flex items-center justify-center gap-6 text-xs flex-wrap">
