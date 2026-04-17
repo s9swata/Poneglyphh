@@ -1,8 +1,5 @@
 import { apiClient } from "@/lib/api-client";
-import {
-  DatasetListItemSchema,
-  PaginatedResponseSchema,
-} from "@/lib/types";
+import type { DatasetListItem, PaginatedResponse } from "@/lib/types";
 import { DatasetCard } from "./dataset-card";
 import Link from "next/link";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
@@ -50,28 +47,8 @@ export async function DatasetGrid(props: DatasetGridProps) {
     );
   }
 
-  const rawData = await res.json();
-
-  // Validate response shape
-  const parsed = PaginatedResponseSchema(DatasetListItemSchema).safeParse(
-    rawData,
-  );
-
-  if (!parsed.success) {
-    console.error("Failed to parse dataset response:", parsed.error);
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-destructive/50 rounded-xl bg-destructive/5">
-        <h3 className="text-lg font-semibold text-destructive">
-          Data formatting error
-        </h3>
-        <p className="text-sm text-destructive/80 mt-2">
-          The server returned an unexpected format.
-        </p>
-      </div>
-    );
-  }
-
-  const { data: datasets, total, page, totalPages } = parsed.data;
+  const { data: datasets, total, page, totalPages } =
+    (await res.json()) as PaginatedResponse<DatasetListItem>;
 
   if (datasets.length === 0) {
     return (

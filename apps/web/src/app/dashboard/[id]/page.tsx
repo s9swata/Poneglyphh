@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import type { Article } from "../components/article-card";
 import { apiClient } from "@/lib/api-client";
-import { PaginatedResponseSchema, DatasetListItemSchema } from "@/lib/types";
+import type { DatasetListItem, PaginatedResponse } from "@/lib/types";
 
 const ARTICLE_CATEGORIES: Record<string, string> = {
   "1": "Health",
@@ -201,11 +201,8 @@ export default function ArticlePage() {
       try {
         const res = await apiClient.api.v1.datasets.$get({ query: { limit: "10" } });
         if (res.ok) {
-          const json = await res.json();
-          const parsed = PaginatedResponseSchema(DatasetListItemSchema).safeParse(json);
-          if (parsed.success) {
-            setDatasets(parsed.data.data);
-          }
+          const json = (await res.json()) as PaginatedResponse<DatasetListItem>;
+          setDatasets(json.data);
         }
       } catch (error) {
         console.error("Failed to fetch datasets:", error);
