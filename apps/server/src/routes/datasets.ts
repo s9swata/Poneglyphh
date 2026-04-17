@@ -1,10 +1,10 @@
 import { db } from "@Poneglyph/db";
-import { datasets, datasetTags, tags } from "@Poneglyph/db/schema/data";
+import { datasets, datasetTags, tags, datasetStatusEnum, fileTypeEnum } from "@Poneglyph/db/schema/data";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 
-const DatasetStatusSchema = z.enum(["pending", "approved", "rejected", "archived"]);
-const FileTypeSchema = z.enum(["pdf", "csv", "xlsx", "xls", "json", "docx", "other"]);
+const DatasetStatusSchema = z.enum(datasetStatusEnum.enumValues);
+const FileTypeSchema = z.enum(fileTypeEnum.enumValues);
 
 const DatasetQuerySchema = z.object({
   page: z.coerce.number().int().positive().default(1),
