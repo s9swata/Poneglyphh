@@ -1,2 +1,16 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap");
+
 @import "@Poneglyph/ui/globals.css";
+
+@keyframes sky-gradient {
+  0% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.animate-sky-gradient {
+  animation: sky-gradient 5s ease-in-out forwards;
+}
