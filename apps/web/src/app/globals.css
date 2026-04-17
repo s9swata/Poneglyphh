@@ -2,61 +2,15 @@
 
 @import "@Poneglyph/ui/globals.css";
 
-@layer base {
-  :root {
-    --radius: 0.5rem;
+@keyframes sky-gradient {
+  0% {
+    background-position: 0% 100%;
   }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  html {
-    font-family: "Onest", sans-serif;
-    color: #22242a;
-    background-color: #ffffff;
-  }
-
-  body {
-    font-family: "Onest", sans-serif;
+  100% {
+    background-position: 0% 0%;
   }
 }
 
-@layer utilities {
-  .container-max {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-
-  .dots-pattern {
-    background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
-    background-size: 16px 16px;
-  }
-
-  /* Ticker animation */
-  .ticker-wrap {
-    overflow: hidden;
-    width: 100%;
-  }
-
-  .ticker-track {
-    display: flex;
-    width: max-content;
-    animation: ticker 20s linear infinite;
-  }
-
-  @keyframes ticker {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
+.animate-sky-gradient {
+  animation: sky-gradient 5s ease-in-out forwards;
 }

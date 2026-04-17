@@ -1,202 +1,167 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
-import { ArrowRight, Search, Loader2 } from "lucide-react";
-import { Highlight, HeroTag } from "@/components/cards";
-import { Navigation } from "@/components/navigation";
-import { Footer } from "@/components/footer";
+import { useRef } from "react";
+import Image from "next/image";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { HowItWorks } from "../components/landing/HowItWorks";
+import { DataCategories } from "../components/landing/DataCategories";
+import { CommunityPillars } from "../components/landing/CommunityPillars";
+import { BlogSection } from "../components/landing/BlogSection";
 
-// Modularized components
-import { SearchResults } from "@/components/home/search-results";
-import { HeroDashboard } from "@/components/home/hero-dashboard";
-import { IntelligenceReports } from "@/components/home/intelligence-reports";
-import { TrustTicker } from "@/components/home/trust-ticker";
-import { AnalyticsTabsUI } from "@/components/home/analytics-tabs";
-import { LiveFeedPanel } from "@/components/home/live-feed-panel";
-import { ImpactHeatmap } from "@/components/home/impact-heatmap";
-import { AiAnalysisViz } from "@/components/home/ai-analysis-viz";
-import { ByTheNumbers } from "@/components/home/by-the-numbers";
+export default function Home() {
+  const containerRef = useRef<HTMLElement>(null);
+  const cloudRef = useRef<HTMLImageElement>(null);
 
-export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [hasSearched, setHasSearched] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchData, setSearchData] = useState<any[]>([]);
-
-  const showResults = hasSearched && searchQuery.trim().length > 0;
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-    setIsSearching(true);
-    setHasSearched(true);
-    try {
-      const response = await fetch(
-        `http://localhost:3001/api/query?q=${encodeURIComponent(searchQuery)}`,
+  useGSAP(
+    () => {
+      gsap.set(cloudRef.current, {
+        y: "50%",
+        scale: 1.5,
+        transformOrigin: "bottom center",
+      });
+      gsap.fromTo(
+        cloudRef.current,
+        { x: "-130%" },
+        { x: "-30%", duration: 2.5, ease: "power1.out", delay: 0.5 },
       );
-      const data = await response.json();
-      setSearchData(data.charts || []);
-    } catch (err) {
-      console.error(err);
-      setSearchData([]);
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  const handleClearSearch = () => {
-    setSearchQuery("");
-    setHasSearched(false);
-  };
+    },
+    { scope: containerRef },
+  );
 
   return (
-    <>
-      <Navigation />
+    <main
+      ref={containerRef}
+      className="w-full relative overflow-x-hidden text-[#2d4a77]"
+    >
+      {/* Fixed animated gradient background for the entire landing page */}
+      <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-[#708db8] via-[#a8c1d8] to-[#edf2f8] bg-[length:100%_200%] animate-sky-gradient pointer-events-none" />
 
-      {/* ══ HERO ══ */}
-      <section className="relative overflow-hidden bg-white">
-        <div className="absolute inset-0 dots-pattern pointer-events-none" aria-hidden />
-        <div className="container-max pt-24 pb-12 flex flex-col items-center gap-8 text-center relative z-10">
-          <HeroTag label="New" text="Agentic research now live — try it at /research" />
-          <h1 className="text-[clamp(44px,7vw,80px)] font-medium leading-[1.05em] tracking-[-0.03em] text-black">
-            The world's humanitarian
-            <br />
-            <Highlight>data commons</Highlight>
+      {/* --- SECTION 1: HERO (100vh) --- */}
+      <section className="relative w-full h-screen z-[1]">
+        <div className="relative z-20 w-full h-full flex flex-col items-center justify-center pt-20">
+          <h1 className="text-6xl md:text-9xl font-black drop-shadow-sm text-center mb-6 tracking-tighter">
+            Poneglyph
           </h1>
-          <p className="text-body-lg text-grey-1 max-w-md">
-            NGOs upload field data. AI extracts insights. Researchers, journalists, and task forces
-            access them — free, open, and actionable.
+          <p className="text-xl md:text-4xl font-medium opacity-90 drop-shadow-sm max-w-2xl text-center px-4">
+            The world's <span className="italic font-serif">open</span> dataset
+            hub.
           </p>
-
-          <form onSubmit={handleSearch} className="w-full max-w-xl">
-            <div className="flex items-center gap-2 bg-white border border-grey-3 rounded-xl p-2 shadow-sm focus-within:border-grey-2 transition-colors">
-              <Search size={20} className="text-grey-2 shrink-0 ml-1" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for data (e.g., 'crimes by region', 'exploitation types')..."
-                className="flex-1 text-base bg-transparent outline-none text-black placeholder:text-grey-2"
-              />
-              <button
-                type="submit"
-                disabled={!searchQuery.trim() || isSearching}
-                className="px-4 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-black/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {isSearching ? <Loader2 size={14} className="animate-spin" /> : "Search"}
-              </button>
-            </div>
-          </form>
-
-          {showResults && !isSearching && (
-            <div className="w-full">
-              <SearchResults query={searchQuery} results={searchData} />
-              <button
-                onClick={handleClearSearch}
-                className="mt-6 text-sm text-grey-1 hover:text-black underline"
-              >
-                Clear search
-              </button>
-            </div>
-          )}
-
-          {!showResults && (
-            <div className="flex items-center gap-3">
-              <Link
-                href="/research"
-                className="px-5 py-2.5 border border-grey-3 text-black text-sm font-medium rounded-xl hover:bg-grey-4 transition-colors"
-              >
-                View insights
-              </Link>
-              <Link
-                href="/contact"
-                className="flex items-center gap-2 px-5 py-2.5 bg-black text-white text-sm font-medium rounded-xl hover:bg-black/80 transition-colors"
-              >
-                Submit your dataset <ArrowRight size={14} />
-              </Link>
-            </div>
-          )}
         </div>
-        {!showResults && (
-          <div className="container-max pb-24 relative z-10">
-            <HeroDashboard />
-          </div>
-        )}
-      </section>
 
-      {/* ══ LATEST STATISTICS ══ */}
-      <section className="py-24 bg-white overflow-hidden">
-        <div className="container-max flex flex-col gap-10">
-          <div className="flex flex-col items-center gap-3 text-center">
-            <h2 className="text-[clamp(28px,4vw,44px)] font-medium leading-tight tracking-tight text-black">
-              Latest Statistics
-            </h2>
-            <p className="text-body text-grey-1 max-w-lg">
-              Explore dynamic articles and statistics on global exploitation, organized crime, and
-              human trafficking networks.
-            </p>
-          </div>
-          <div className="-mx-4 px-4 lg:mx-0 lg:px-0">
-            <IntelligenceReports />
-          </div>
+        {/* Cloud layer */}
+        <img
+          ref={cloudRef}
+          src="/assets/cloud_big.avif"
+          alt="Big Cloud"
+          className="absolute bottom-0 left-0 w-full object-cover z-[1] pointer-events-none"
+          style={{
+            transform: "translateX(-100%) scale(1.5)",
+            transformOrigin: "bottom center",
+          }}
+        />
+
+        {/* Swans and Birds */}
+        <div className="absolute inset-0 z-[5] pointer-events-none">
+          <Image
+            src="/assets/bird1.avif"
+            alt="Bird 1"
+            width={200}
+            height={200}
+            className="absolute z-10 top-[20%] right-[25%] w-18 md:w-34 object-contain opacity-100"
+          />
+          <Image
+            src="/assets/bird3.avif"
+            alt="Bird 3"
+            width={200}
+            height={200}
+            className="absolute z-20 top-[35%] right-[10%] w-22 md:w-42 object-contain opacity-100"
+          />
+          <Image
+            src="/assets/bird2.avif"
+            alt="Bird 2"
+            width={200}
+            height={200}
+            className="absolute z-30 top-[60%] right-[20%] w-22 md:w-42 object-contain opacity-100"
+          />
+          <Image
+            src="/assets/bird3.avif"
+            alt="Bird 3"
+            width={200}
+            height={200}
+            className="absolute z-20 top-[75%] right-[40%] w-24 md:w-46 object-contain opacity-100"
+          />
+          <Image
+            src="/assets/bird2.avif"
+            alt="Bird 2"
+            width={200}
+            height={200}
+            className="absolute z-30 top-[90%] left-[20%] w-26 md:w-52 object-contain opacity-100"
+          />
         </div>
       </section>
 
-      <TrustTicker />
+      {/* --- CONTENT SECTIONS --- */}
+      <div className="relative z-[2] bg-white/20 backdrop-blur-3xl shadow-[0_-50px_100px_rgba(0,0,0,0.05)] rounded-t-[4rem]">
+        {/* SECTION 2: HOW IT WORKS */}
+        <HowItWorks />
 
-      {/* ══ PLATFORM OVERVIEW ══ */}
-      <section className="py-24 bg-white">
-        <div className="container-max flex flex-col items-center gap-10">
-          <div className="flex flex-col items-center gap-6 text-center">
-            <h2 className="text-[clamp(32px,5vw,52px)] font-medium leading-tight tracking-tight text-black">
-              All humanitarian data, one open <Highlight>platform</Highlight>
-            </h2>
-            <Link
-              href="/contact"
-              className="flex items-center gap-2 px-5 py-2.5 bg-black text-white text-sm font-medium rounded-xl hover:bg-black/80 transition-colors"
-            >
-              Request access <ArrowRight size={14} />
-            </Link>
+        {/* SECTION 3: CATEGORIES */}
+        <DataCategories />
+
+        {/* SECTION 4: COMMUNITY PILLARS */}
+        <CommunityPillars />
+
+        {/* SECTION 5: BLOG SECTION */}
+        <BlogSection />
+
+        {/* --- DECORATIVE FOOTER BRANCHES --- */}
+        <section className="relative w-full h-[60vh] z-[4] overflow-hidden flex items-center justify-center">
+          {/* Left Branches */}
+          <img
+            src="/assets/branches.avif"
+            alt="Tree Branches Left"
+            className="absolute top-[10%] left-[-5%] w-[40%] md:w-[30%] object-contain opacity-90 pointer-events-none drop-shadow-2xl z-[5]"
+          />
+          {/* Right Top Branches */}
+          <img
+            src="/assets/branches3.avif"
+            alt="Tree Branches Right Top"
+            className="absolute top-[-5%] right-[-5%] w-[45%] md:w-[35%] object-contain opacity-90 pointer-events-none drop-shadow-2xl z-[5]"
+          />
+          {/* Right Bottom Branches with Bird */}
+          <div className="absolute bottom-[5%] right-[-5%] w-[50%] md:w-[40%] z-[6] pointer-events-none">
+            <img
+              src="/assets/branches4.avif"
+              alt="Tree Branches Right Bottom"
+              className="w-full object-contain opacity-95 drop-shadow-2xl"
+            />
+            <img
+              src="/assets/sparrow.svg"
+              alt="Sparrow"
+              className="absolute top-[-20%] left-[30%] w-[20%] md:w-[15%] object-contain drop-shadow-lg"
+              style={{ transform: "scaleX(-1)" }} // Flips the bird to look inward
+            />
           </div>
-          <AnalyticsTabsUI />
-        </div>
-      </section>
 
-      {/* ══ LIVE FEED + HEATMAP ══ */}
-      <section className="py-24 bg-white">
-        <div className="container-max grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          <div className="bg-primary rounded-2xl p-6">
-            <LiveFeedPanel />
+          <div className="relative z-10 text-center">
+            <h3 className="text-4xl md:text-6xl font-light tracking-tight text-[#2d4a77]">
+              Ready to explore the{" "}
+              <span className="italic font-serif">unseen</span>?
+            </h3>
+            <button className="mt-12 bg-[#1e1e1e] text-white px-12 py-5 rounded-3xl text-xl font-bold hover:scale-105 transition-all shadow-2xl">
+              Get Started Now
+            </button>
           </div>
-          <ImpactHeatmap />
-        </div>
-      </section>
+        </section>
+      </div>
 
-      {/* ══ AI ANALYSIS ══ */}
-      <section className="py-24 bg-grey-4">
-        <div className="container-max flex flex-col items-center gap-12">
-          <div className="flex flex-col items-center gap-3 text-center max-w-xl">
-            <h2 className="text-[clamp(28px,4vw,44px)] font-medium tracking-tight text-black">
-              Powered by field-aware intelligence
-            </h2>
-            <p className="text-body text-grey-1">
-              Poneglyph agents process thousands of disparate reports to extract structured,
-              actionable data points for task forces.
-            </p>
-          </div>
-          <AiAnalysisViz />
-        </div>
-      </section>
-
-      {/* ══ BY THE NUMBERS ══ */}
-      <section className="py-24 bg-white">
-        <div className="container-max flex flex-col gap-12">
-          <ByTheNumbers />
-        </div>
-      </section>
-
-      <Footer />
-    </>
+      {/* Background decoration: Cloud positioned lower */}
+      <img
+        src="/assets/cloud.avif"
+        alt="Small Cloud decoration"
+        className="fixed top-[150vh] right-[-5%] w-[40%] object-contain z-[0] opacity-30 pointer-events-none mix-blend-multiply"
+      />
+    </main>
   );
 }
