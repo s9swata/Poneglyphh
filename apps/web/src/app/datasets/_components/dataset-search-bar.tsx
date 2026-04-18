@@ -36,7 +36,7 @@ export function DatasetSearchBar({ initialQuery = "" }: DatasetSearchBarProps) {
     // Reset to page 1 on new search
     params.set("page", "1");
 
-    router.push(`/datasets?${params.toString()}`);
+    router.replace(`/datasets?${params.toString()}`);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

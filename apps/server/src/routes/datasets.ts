@@ -1,5 +1,11 @@
 import { db } from "@Poneglyph/db";
-import { datasets, datasetTags, tags, datasetStatusEnum, fileTypeEnum } from "@Poneglyph/db/schema/data";
+import {
+  datasets,
+  datasetTags,
+  tags,
+  datasetStatusEnum,
+  fileTypeEnum,
+} from "@Poneglyph/db/schema/data";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 
@@ -12,9 +18,11 @@ const DatasetQuerySchema = z.object({
   q: z.string().max(500).optional(),
   status: DatasetStatusSchema.optional(),
   fileType: FileTypeSchema.optional(),
-  tags: z.array(z.string()).optional(),
+  tags: z.string().optional(),
   language: z.string().max(10).optional(),
-  sortBy: z.enum(["createdAt", "viewCount", "downloadCount", "publicationDate"]).default("createdAt"),
+  sortBy: z
+    .enum(["createdAt", "viewCount", "downloadCount", "publicationDate"])
+    .default("createdAt"),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
 });
 import {
@@ -82,9 +90,9 @@ export const datasetsRoute = app.get(
         tagCounts.set(row.datasetId, (tagCounts.get(row.datasetId) || 0) + 1);
       }
 
-      const datasetIds = [...new Set(matchingTagRows.map((r) => r.datasetId))].filter(
-        (id) => (tagCounts.get(id) || 0) >= (query.tags?.length ?? 0)
-      );
+      const datasetIds = [
+        ...new Set(matchingTagRows.map((r) => r.datasetId)),
+      ].filter((id) => (tagCounts.get(id) || 0) >= (query.tags?.length ?? 0));
 
       if (datasetIds.length === 0) {
         return c.json({ data: [], total: 0, page, limit, totalPages: 0 }, 200);

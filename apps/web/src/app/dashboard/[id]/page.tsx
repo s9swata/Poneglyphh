@@ -199,7 +199,9 @@ export default function ArticlePage() {
   useEffect(() => {
     async function fetchDatasets() {
       try {
-        const res = await apiClient.api.v1.datasets.$get({ query: { limit: "10" } });
+        const res = await apiClient.api.v1.datasets.$get({
+          query: { limit: "10" },
+        });
         if (res.ok) {
           const json = (await res.json()) as PaginatedResponse<DatasetListItem>;
           setDatasets(json.data);
@@ -236,10 +238,17 @@ export default function ArticlePage() {
   const articleUrl = `https://poneglyph.org/dashboard/${article.id}`;
   const embedCode = `<iframe src="https://poneglyph.org/embed/${article.id}" width="600" height="450" frameborder="0" allowfullscreen></iframe>`;
 
-  const copyToClipboard = (text: string, setCopied: (v: boolean) => void) => {
-    navigator.clipboard.writeText(text).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = async (
+    text: string,
+    setCopied: (v: boolean) => void,
+  ) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      setCopied(false);
+    }
   };
 
   return (
@@ -477,9 +486,7 @@ export default function ArticlePage() {
               <div className="rounded-md border border-grey-3 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Database className="size-4 text-blue" />
-                  <p className="text-body-sm font-bold text-black">
-                    Datasets
-                  </p>
+                  <p className="text-body-sm font-bold text-black">Datasets</p>
                 </div>
                 {datasetsLoading ? (
                   <div className="space-y-2">
