@@ -18,7 +18,15 @@ const DatasetQuerySchema = z.object({
   q: z.string().max(500).optional(),
   status: DatasetStatusSchema.optional(),
   fileType: FileTypeSchema.optional(),
-  tags: z.string().optional(),
+  tags: z
+    .string()
+    .transform((value) =>
+      value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+    )
+    .optional(),
   language: z.string().max(10).optional(),
   sortBy: z
     .enum(["createdAt", "viewCount", "downloadCount", "publicationDate"])
