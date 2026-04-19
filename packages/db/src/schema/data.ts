@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -165,7 +165,7 @@ export const organisation = pgTable(
     socialLinks: jsonb("social_links").$type<Record<string, string>>(),
 
     // Denormalized upload index — appended to by POST /api/upload/callback
-    uploads: uuid("uploads").array().default([]).notNull(),
+    uploads: uuid("uploads").array().default(sql`'{}'::uuid[]`).notNull(),
 
     // Admin verification
     isVerified: boolean("is_verified").default(false).notNull(),
