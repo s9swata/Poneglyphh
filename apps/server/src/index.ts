@@ -1,14 +1,19 @@
+import { logger, honoLogger } from "@/lib/logger";
 import { auth } from "@Poneglyph/auth";
 import { env } from "@Poneglyph/env/server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
 import { apiRouter } from "./routes/router";
 
 const app = new Hono();
 
 // Middlewares
-app.use(logger());
+app.use(
+  honoLogger({
+    category: ["poneglyph", "http"],
+    skip: (c) => c.req.path === "/health",
+  }),
+);
 app.use(
   "/*",
   cors({
@@ -43,7 +48,7 @@ app.route("/", api);
 
 // Fallback handlers
 app.onError((err, c) => {
-  console.error(err); // TODO: use logger
+  logger.error("Unhandled error: {error}", { error: err.message });
   return c.json({ error: "Internal Server Error" }, 500);
 });
 
