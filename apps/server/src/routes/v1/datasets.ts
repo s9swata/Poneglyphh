@@ -364,6 +364,15 @@ datasetsRouter.get(
 
     const key = s3Keys[index]!;
 
+    // Increment download_count when serving file redirects
+    db.execute(sql`UPDATE datasets SET download_count = download_count + 1 WHERE id = ${id}`).catch(
+      (err) =>
+        log.warn("Failed to increment download_count for {id}: {error}", {
+          id,
+          error: String(err),
+        }),
+    );
+
     if (isExternalUrl(key)) {
       log.debug("Redirecting to external URL for dataset={id} index={index}", {
         id,
