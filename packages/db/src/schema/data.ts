@@ -160,10 +160,7 @@ export const organisation = pgTable(
 
     // Flexible social links — add keys without schema changes
     // e.g. { "twitter": "https://x.com/org", "linkedin": "https://linkedin.com/org" }
-    socialLinks: text("social_links").array().$type<string[]>(),
-
-    // Denormalized upload index — appended to by POST /api/upload/callback
-    uploads: uuid("uploads").array().default(sql`'{}'::uuid[]`).notNull(),
+    socialLinks: text("social_links").array(),
 
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
