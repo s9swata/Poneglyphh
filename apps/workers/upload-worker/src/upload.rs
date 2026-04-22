@@ -539,7 +539,14 @@ async fn notify_server(callback_url: &str, upload_id: &str, dataset_id: Uuid, er
         error: error.map(str::to_string),
     };
 
-    match HTTP.post(callback_url).json(&payload).send().await {
+    let secret = std::env::var("UPLOAD_CALLBACK_SECRET").unwrap_or_default();
+
+    let mut req = HTTP.post(callback_url).json(&payload);
+    if !secret.is_empty() {
+        req = req.header("x-upload-callback-secret", secret);
+    }
+
+    match req.send().await {
         Ok(resp) if resp.status().is_success() => {
             tracing::info!("Server notified successfully");
         }
