@@ -3,6 +3,7 @@ import { auth } from "@Poneglyph/auth";
 import { env } from "@Poneglyph/env/server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { authMiddleware } from "./middleware/auth";
 import { apiRouter } from "./routes/router";
 
 const app = new Hono();
@@ -14,8 +15,21 @@ app.use(
     skip: (c) => c.req.path === "/health",
   }),
 );
+
 app.use(
-  "/*",
+  "/api/auth/*",
+  cors({
+    origin: env.CORS_ORIGIN,
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+    exposeHeaders: ["Content-Length"],
+    maxAge: 600,
+    credentials: true,
+  }),
+);
+
+app.use(
+  "/api/*",
   cors({
     origin: env.CORS_ORIGIN,
     allowMethods: ["GET", "POST", "OPTIONS"],
@@ -43,6 +57,7 @@ app.get("/health", (c) =>
 // API sub-app
 // URLs: /api/chat/...
 const api = new Hono().basePath("/api");
+api.use("/*", authMiddleware);
 api.route("/", apiRouter);
 app.route("/", api);
 
@@ -55,3 +70,5 @@ app.onError((err, c) => {
 app.notFound((c) => c.json({ error: "Not Found" }, 404));
 
 export default app;
+
+export type AppType = typeof app;

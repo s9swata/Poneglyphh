@@ -11,6 +11,7 @@ import {
   normalizePgTextArray,
 } from "@/lib/helpers/routehelprs";
 import { getPresignedUrl } from "../../lib/s3";
+import { requireAuth } from "../../middleware/auth";
 
 const log = logger.getChild("datasets");
 
@@ -333,6 +334,7 @@ datasetsRouter.get("/:id", zValidator("param", z.object({ id: z.uuid() })), asyn
  */
 datasetsRouter.get(
   "/:id/files/:index",
+  requireAuth,
   zValidator("param", z.object({ id: z.uuid(), index: z.coerce.number().int().min(0) })),
   zValidator("query", z.object({ download: z.enum(["true", "false"]).optional() })),
   async (c) => {

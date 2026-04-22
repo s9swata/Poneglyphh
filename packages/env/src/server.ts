@@ -26,6 +26,12 @@ export const env = createEnv({
     // Redis Cache (Upstash)
     UPSTASH_REDIS_REST_URL: z.url(),
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+    // Email (Resend)
+    RESEND_API_KEY: z.string().min(1),
+    RESEND_FROM_EMAIL: z.string().email(),
+    RESEND_FROM_NAME: z.string().min(1),
+    // Internal callback secret for upload worker
+    UPLOAD_CALLBACK_SECRET: z.string().min(1),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

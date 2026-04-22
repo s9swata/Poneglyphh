@@ -1,13 +1,17 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { UploadCallbackSchema, UploadRequestSchema } from "@Poneglyph/schemas/upload";
+import { env } from "@Poneglyph/env/server";
 import { logger } from "@/lib/logger";
 import { uploadFile, getPresignedUrl } from "../../lib/s3";
 import { publishUploadMessage } from "../../lib/queue";
+import { requireAuth } from "../../middleware/auth";
+
+import { type AuthContext } from "../../middleware/auth";
 
 const log = logger.getChild("upload");
 
-export const uploadRouter = new Hono();
+export const uploadRouter = new Hono<{ Variables: AuthContext }>();
 
 // File type -> extension mapping for S3 keys and DB file_type enum
 const MIME_TO_EXT: Record<string, string> = {
@@ -35,10 +39,11 @@ const MIME_TO_EXT: Record<string, string> = {
  *   - thumbnail    (optional, image file)
  *
  * Uploads files to R2 in parallel, enqueues processing job, returns upload_id.
+ * Requires authentication.
  */
-uploadRouter.post("/", zValidator("form", UploadRequestSchema), async (c) => {
-  const session = c.get("user" as never) as { id: string } | undefined;
-  const userId = session?.id ?? "anonymous";
+uploadRouter.post("/", requireAuth, zValidator("form", UploadRequestSchema), async (c) => {
+  const user = c.get("user")!;
+  const userId = user.id;
 
   const { title, description, summary, publisher, tags, files, thumbnail } = c.req.valid("form");
 
@@ -106,9 +111,15 @@ uploadRouter.post("/", zValidator("form", UploadRequestSchema), async (c) => {
 /**
  * POST /api/upload/callback
  * Called by the Rust worker when processing is done.
- * Extend this to push WebSocket/SSE events to the frontend.
+ * Protected by an internal secret header (not user auth).
  */
 uploadRouter.post("/callback", zValidator("json", UploadCallbackSchema), async (c) => {
+  const secret = c.req.header("x-upload-callback-secret");
+  if (secret !== env.UPLOAD_CALLBACK_SECRET) {
+    log.warn("Upload callback rejected: invalid secret");
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
   const body = c.req.valid("json");
 
   if (body.status === "completed") {

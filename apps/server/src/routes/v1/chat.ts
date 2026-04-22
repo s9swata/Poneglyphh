@@ -4,10 +4,13 @@ import { ChatRequestSchema } from "@Poneglyph/schemas/chat";
 import { createAgentUIStreamResponse } from "ai";
 import { logger } from "@/lib/logger";
 import { createOrchestratorAgent } from "../../agents/orchestrator";
+import { requireAuth } from "../../middleware/auth";
+
+import { type AuthContext } from "../../middleware/auth";
 
 const log = logger.getChild("agent");
 
-export const chatRouter = new Hono();
+export const chatRouter = new Hono<{ Variables: AuthContext }>();
 
 /**
  * POST /api/chat
@@ -18,6 +21,7 @@ export const chatRouter = new Hono();
  *
  * curl -X POST http://localhost:3000/api/chat \
  *   -H "Content-Type: application/json" \
+ *   -H "Cookie: ..." \
  *   -d '{
  *     "messages": [
  *       {
@@ -35,24 +39,18 @@ export const chatRouter = new Hono();
  *   --no-buffer
  */
 
-chatRouter.post("/", zValidator("json", ChatRequestSchema), async (c) => {
-  // Auth disabled for now — will add in next PR
-  // const session = await auth.api.getSession({ headers: c.req.raw.headers });
-  // if (!session?.user) return c.json({ error: "Authentication required" }, 401);
-
+chatRouter.post("/", requireAuth, zValidator("json", ChatRequestSchema), async (c) => {
+  const user = c.get("user")!;
   const { messages } = c.req.valid("json");
   const startTime = Date.now();
 
-  log.info("Chat request received: {messageCount} message(s)", {
+  log.info("Chat request received from user={userId}: {messageCount} message(s)", {
+    userId: user.id,
     messageCount: messages.length,
   });
 
   const agent = createOrchestratorAgent();
 
-  // Two things to note here:
-  // 1. It's "uiMessages", not "messages" — that's what the API expects
-  // 2. The `as any` cast is because TypeScript gets strict with generic tool types
-  //    on ToolLoopAgent — the runtime behavior is fine, just a type narrowing issue
   const response = createAgentUIStreamResponse({
     agent: agent as any,
     uiMessages: messages,
