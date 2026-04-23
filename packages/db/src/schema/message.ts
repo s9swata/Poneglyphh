@@ -1,22 +1,30 @@
-import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, uuid, index, uniqueIndex } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { relations, sql } from "drizzle-orm";
+import { check, pgTable, text, timestamp, uuid, index, uniqueIndex } from "drizzle-orm/pg-core";
+import { user } from "./users";
 
 // One row per unique pair of participants.
-// participant_one_id is always the lexicographically smaller user id —
-// enforced in app code before insert to prevent duplicate pairs.
+// The CHECK constraint enforces participant_one_id < participant_two_id at the
+// DB level, so reversed pairs (userB, userA) are rejected when (userA, userB)
+// already exists. App code must sort the two IDs before inserting:
+//   const [one, two] = [senderId, receiverId].sort();
+//
+// Both participant columns are nullable with SET NULL on delete.
+// When a user deletes their account the conversation row survives - messages
+// are preserved and the deleted participant slot becomes null.
+// Cascading the conversation delete would wipe all messages before
+// sender_id SET NULL could ever fire, defeating history preservation.
 export const conversation = pgTable(
   "conversation",
   {
     id: uuid("id").primaryKey().defaultRandom(),
 
+    // Nullable — becomes null if the user deletes their account
     participantOneId: text("participant_one_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "set null" }),
 
+    // Nullable — becomes null if the user deletes their account
     participantTwoId: text("participant_two_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "set null" }),
 
     // Denormalized — updated on every new message insert.
     // Used to sort inbox by recency without a subquery.
@@ -27,10 +35,16 @@ export const conversation = pgTable(
   (table) => [
     index("conversation_participant_one_id_idx").on(table.participantOneId),
     index("conversation_participant_two_id_idx").on(table.participantTwoId),
-    // Prevents two rows for the same pair
+    // Unique on the ordered pair — prevents (userA, userB) being inserted twice
     uniqueIndex("conversation_participants_unique").on(
       table.participantOneId,
       table.participantTwoId,
+    ),
+    // DB-level enforcement that one < two — prevents reversed pair (userB, userA)
+    // from being inserted when (userA, userB) already exists
+    check(
+      "conversation_participants_ordered",
+      sql`${table.participantOneId} < ${table.participantTwoId}`,
     ),
   ],
 );
@@ -45,7 +59,9 @@ export const message = pgTable(
       .notNull()
       .references(() => conversation.id, { onDelete: "cascade" }),
 
-    // SET NULL on delete - preserves message history if sender deletes account
+    // SET NULL on delete — preserves message content if sender deletes account.
+    // This now correctly fires because the conversation row is kept alive
+    // (participant columns use SET NULL, not CASCADE).
     senderId: text("sender_id").references(() => user.id, { onDelete: "set null" }),
 
     content: text("content").notNull(),
