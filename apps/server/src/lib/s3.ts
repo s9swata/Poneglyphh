@@ -34,10 +34,17 @@ export async function uploadFile(
 
 /**
  * Generate a presigned GET URL valid for 1 hour.
- * Used to give the Rust worker temporary download access.
+ * Pass forceDownload=true to set Content-Disposition: attachment so the browser
+ * prompts a file save instead of opening inline.
  */
-export async function getPresignedUrl(key: string): Promise<string> {
-  return getSignedUrl(s3, new GetObjectCommand({ Bucket: env.S3_BUCKET_NAME, Key: key }), {
-    expiresIn: 3600,
-  });
+export async function getPresignedUrl(key: string, forceDownload = false): Promise<string> {
+  return getSignedUrl(
+    s3,
+    new GetObjectCommand({
+      Bucket: env.S3_BUCKET_NAME,
+      Key: key,
+      ...(forceDownload ? { ResponseContentDisposition: "attachment" } : {}),
+    }),
+    { expiresIn: 3600 },
+  );
 }

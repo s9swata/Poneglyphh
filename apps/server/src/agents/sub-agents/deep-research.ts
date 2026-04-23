@@ -2,9 +2,14 @@ import { ToolLoopAgent, tool, stepCountIs } from "ai";
 import { groq } from "@ai-sdk/groq";
 import { tavilySearch, tavilyExtract } from "@tavily/ai-sdk";
 import { z } from "zod";
+import { logger } from "@/lib/logger";
 import { redis } from "../../lib/redis";
 import { hashQuery } from "../../lib/hash";
 import { deepResearchSystemPrompt } from "../prompts/deep-research";
+
+const log = logger.getChild("cache");
+const agentLog = logger.getChild("agent");
+const externalLog = logger.getChild("external");
 
 const DEEP_CACHE_TTL = 60 * 60 * 2; // 2 hours
 const DEEP_CACHE_VERSION = "v1";
@@ -40,6 +45,8 @@ export const deepResearchTool = tool({
       .describe("Additional context from previous search results to refine the research"),
   }),
   execute: async ({ topic, context }) => {
+    agentLog.info("Tool invoked: deepResearch");
+
     const input = context ? JSON.stringify({ topic, context }) : topic;
     const hash = hashQuery(input);
     const cacheKey = `tool:deep:${DEEP_CACHE_VERSION}:${hash}`;
@@ -48,19 +55,31 @@ export const deepResearchTool = tool({
     try {
       cached = await redis.get<string>(cacheKey);
     } catch {
-      // Redis down — fall back to API
+      // Redis down -> fall back to API
     }
-    if (cached) return cached;
+    if (cached) {
+      log.debug("Deep research cache hit", { key: `tool:deep:${DEEP_CACHE_VERSION}:<hash>` });
+      return cached;
+    }
+
+    log.debug("Deep research cache miss", { key: `tool:deep:${DEEP_CACHE_VERSION}:<hash>` });
 
     const prompt = context
       ? `Research topic: ${topic}\n\nAdditional context from prior searches:\n${context}\n\nConduct thorough research and provide a structured summary.`
       : `Research topic: ${topic}\n\nConduct thorough research and provide a structured summary.`;
 
+    externalLog.debug("Groq deep research agent started");
+    const start = Date.now();
     const result = await deepResearchAgent.generate({
       prompt,
     });
+    externalLog.debug("Groq deep research agent completed in {duration}ms", {
+      duration: Date.now() - start,
+    });
 
-    redis.set(cacheKey, result.text, { ex: DEEP_CACHE_TTL }).catch(() => {});
+    redis.set(cacheKey, result.text, { ex: DEEP_CACHE_TTL }).catch((err) => {
+      log.warn("Failed to cache deep research result: {error}", { error: String(err) });
+    });
 
     return result.text;
   },

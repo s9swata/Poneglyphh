@@ -1,8 +1,12 @@
 import { tool } from "ai";
 import { z } from "zod";
 import { db, sql } from "@Poneglyph/db";
+import { logger } from "@/lib/logger";
 import { embedQuery } from "../../lib/embeddings";
 import { getPresignedUrl } from "../../lib/s3";
+
+const log = logger.getChild("db");
+const agentLog = logger.getChild("agent");
 
 const TOP_K = 5; // FIXME: I will make it 10 after we have much more data in db
 
@@ -23,10 +27,12 @@ export const searchDatabaseTool = tool({
     query: z.string().describe("The search query describing what data or reports to find"),
   }),
   execute: async ({ query }) => {
+    agentLog.info("Tool invoked: searchDatabase");
+
     const queryEmbedding = await embedQuery(query);
     const embeddingStr = `[${queryEmbedding.join(",")}]`;
 
-    // `<=>` is pgvector's cosine distance operator — same as drizzle's cosineDistance()
+    const dbStart = Date.now();
     const results = await db.execute<{
       id: string;
       title: string;
@@ -60,6 +66,11 @@ export const searchDatabaseTool = tool({
       ORDER BY similarity DESC
       LIMIT ${TOP_K}
     `);
+
+    log.debug("pgvector search completed in {duration}ms, {rowCount} rows", {
+      duration: Date.now() - dbStart,
+      rowCount: results.rows.length,
+    });
 
     const rows = results.rows;
 

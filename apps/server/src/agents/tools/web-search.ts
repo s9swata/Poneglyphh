@@ -1,8 +1,13 @@
 import { generateText, tool } from "ai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
+import { logger } from "@/lib/logger";
 import { redis } from "../../lib/redis";
 import { hashQuery } from "../../lib/hash";
+
+const log = logger.getChild("cache");
+const agentLog = logger.getChild("agent");
+const externalLog = logger.getChild("external");
 
 const WEB_CACHE_TTL = 60 * 30; // 30 minutes
 const WEB_CACHE_VERSION = "v1";
@@ -30,18 +35,31 @@ async function runGoogleGroundedSearch(query: string): Promise<CachedWebResult> 
   try {
     cached = await redis.get<CachedWebResult>(cacheKey);
   } catch {
-    // Redis down — fall back to API
+    // Redis down -> fall back to API
   }
-  if (cached) return cached;
+  if (cached) {
+    log.debug("Web search cache hit", { key: `tool:web:${WEB_CACHE_VERSION}:<hash>` });
+    return cached;
+  }
 
+  log.debug("Web search cache miss", { key: `tool:web:${WEB_CACHE_VERSION}:<hash>` });
+  externalLog.debug("Gemini Google Search API call started");
+
+  const start = Date.now();
   const { text, sources } = await generateText({
     model: google("gemini-2.5-flash"),
     tools: { google_search: google.tools.googleSearch({}) },
     prompt: query,
   });
 
+  externalLog.debug("Gemini Google Search API call completed in {duration}ms", {
+    duration: Date.now() - start,
+  });
+
   const result: CachedWebResult = { summary: text, sources };
-  redis.set(cacheKey, result, { ex: WEB_CACHE_TTL }).catch(() => {});
+  redis.set(cacheKey, result, { ex: WEB_CACHE_TTL }).catch((err) => {
+    log.warn("Failed to cache web search result: {error}", { error: String(err) });
+  });
 
   return result;
 }
@@ -54,5 +72,8 @@ export const webSearchTool = tool({
   inputSchema: z.object({
     query: z.string().describe("The search query"),
   }),
-  execute: async ({ query }) => runGoogleGroundedSearch(query),
+  execute: async ({ query }) => {
+    agentLog.info("Tool invoked: webSearch");
+    return runGoogleGroundedSearch(query);
+  },
 });

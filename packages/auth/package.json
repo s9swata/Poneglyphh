@@ -15,6 +15,7 @@
     "@Poneglyph/env": "workspace:*",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
+    "resend": "^4.3.0",
     "zod": "catalog:"
   },
   "devDependencies": {

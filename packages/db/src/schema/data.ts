@@ -9,10 +9,11 @@ import {
   integer,
   varchar,
   uuid,
+  primaryKey,
   pgEnum,
   vector,
 } from "drizzle-orm/pg-core";
-import { user } from "./auth";
+import { user, volunteer, organisation } from "./users";
 
 export const sourceTypeEnum = pgEnum("source_type", ["upload", "external_url", "api"]);
 
@@ -114,6 +115,27 @@ export const datasetTags = pgTable(
   ],
 );
 
+// Junction table linking volunteers with tags
+export const volunteerTags = pgTable(
+  "volunteer_tags",
+  {
+    volunteerId: text("volunteer_id")
+      .notNull()
+      .references(() => volunteer.userId, { onDelete: "cascade" }),
+    tagId: uuid("tag_id")
+      .notNull()
+      .references(() => tags.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("idx_volunteer_tags_tag_id").on(table.tagId),
+    primaryKey({
+      name: "volunteer_tags_pk",
+      columns: [table.volunteerId, table.tagId],
+    }),
+  ],
+);
+
 export const syncStatusEnum = pgEnum("sync_status", ["running", "completed", "failed"]);
 
 export const syncLogs = pgTable("sync_logs", {
@@ -132,26 +154,6 @@ export const syncLogs = pgTable("sync_logs", {
   error: text("error"),
 });
 
-export const organisation = pgTable("organisation", {
-  userId: text("user_id")
-    .primaryKey()
-    .references(() => user.id, { onDelete: "cascade" }),
-  // Core identity
-  tagline: varchar("tagline", { length: 160 }),
-  description: text("description"),
-  // Location & contact
-  country: varchar("country", { length: 100 }),
-  website: text("website"),
-
-  socialLinks: text("social_links").array(),
-
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-});
-
 export const sourcesRelations = relations(sources, ({ one, many }) => ({
   user: one(user, {
     fields: [sources.userId],
@@ -166,6 +168,7 @@ export const sourcesRelations = relations(sources, ({ one, many }) => ({
 
 export const tagsRelations = relations(tags, ({ many }) => ({
   datasetTags: many(datasetTags),
+  volunteerTags: many(volunteerTags),
 }));
 
 export const datasetsRelations = relations(datasets, ({ one, many }) => ({
@@ -187,10 +190,13 @@ export const datasetTagsRelations = relations(datasetTags, ({ one }) => ({
   }),
 }));
 
-export const organisationRelations = relations(organisation, ({ one, many }) => ({
-  user: one(user, {
-    fields: [organisation.userId],
-    references: [user.id],
+export const volunteerTagsRelations = relations(volunteerTags, ({ one }) => ({
+  volunteer: one(volunteer, {
+    fields: [volunteerTags.volunteerId],
+    references: [volunteer.userId],
   }),
-  sources: many(sources),
+  tag: one(tags, {
+    fields: [volunteerTags.tagId],
+    references: [tags.id],
+  }),
 }));
