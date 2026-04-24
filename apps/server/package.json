@@ -24,7 +24,7 @@
     "@tavily/ai-sdk": "^0.4.1",
     "@upstash/redis": "^1.37.0",
     "ai": "^6.0.168",
-    "amqplib": "^0.10.5",
+    "@google-cloud/pubsub": "^5.1.0",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "hono": "^4.8.2",
@@ -32,7 +32,6 @@
   },
   "devDependencies": {
     "@Poneglyph/config": "workspace:*",
-    "@types/amqplib": "^0.10.5",
     "@types/bun": "catalog:",
     "tsdown": "^0.16.5",
     "typescript": "^5"
