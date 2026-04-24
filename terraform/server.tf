@@ -1,0 +1,154 @@
+locals {
+  cloud_run_env_vars = [
+    {
+      name  = "NODE_ENV"
+      value = "production"
+    },
+    {
+      name  = "BETTER_AUTH_URL"
+      value = var.better_auth_url
+    },
+    {
+      name  = "CORS_ORIGIN"
+      value = var.cors_origin
+    },
+    {
+      name  = "DATABASE_URL"
+      value = var.database_url
+    },
+    {
+      name  = "BETTER_AUTH_SECRET"
+      value = var.better_auth_secret
+    },
+    {
+      name  = "S3_ACCESS_KEY"
+      value = var.s3_access_key
+    },
+    {
+      name  = "S3_SECRET_KEY"
+      value = var.s3_secret_key
+    },
+    {
+      name  = "S3_BUCKET_NAME"
+      value = var.s3_bucket_name
+    },
+    {
+      name  = "S3_ENDPOINT"
+      value = var.s3_endpoint
+    },
+    {
+      name  = "S3_REGION"
+      value = var.s3_region
+    },
+    {
+      name  = "RABBITMQ_URL"
+      value = var.rabbitmq_url
+    },
+    {
+      name  = "RABBITMQ_QUEUE"
+      value = var.rabbitmq_queue
+    },
+    {
+      name  = "GOOGLE_GENERATIVE_AI_API_KEY"
+      value = var.google_generative_ai_api_key
+    },
+    {
+      name  = "GROQ_API_KEY"
+      value = var.groq_api_key
+    },
+    {
+      name  = "TAVILY_API_KEY"
+      value = var.tavily_api_key
+    },
+    {
+      name  = "UPSTASH_REDIS_REST_URL"
+      value = var.upstash_redis_rest_url
+    },
+    {
+      name  = "UPSTASH_REDIS_REST_TOKEN"
+      value = var.upstash_redis_rest_token
+    },
+    {
+      name  = "RESEND_API_KEY"
+      value = var.resend_api_key
+    },
+    {
+      name  = "RESEND_FROM_EMAIL"
+      value = var.resend_from_email
+    },
+    {
+      name  = "RESEND_FROM_NAME"
+      value = var.resend_from_name
+    },
+    {
+      name  = "UPLOAD_CALLBACK_SECRET"
+      value = var.upload_callback_secret
+    },
+  ]
+}
+
+resource "google_project_service" "required" {
+  for_each = toset([
+    "run.googleapis.com",
+  ])
+
+  project            = var.project_id
+  service            = each.value
+  disable_on_destroy = false
+}
+
+module "cloud_run" {
+  source  = "GoogleCloudPlatform/cloud-run/google"
+  version = "~> 0.26"
+
+  service_name = var.service_name
+  project_id   = var.project_id
+  location     = var.region
+  image        = var.image
+
+  ports = {
+    name = "http1"
+    port = var.container_port
+  }
+
+  timeout_seconds = 120 # Maybe i have to chnage it depeending on my chat endpoint usgae
+  members         = ["allUsers"]
+
+  limits = {
+    cpu    = "1000m"
+    memory = "512Mi"
+  }
+
+  env_vars = local.cloud_run_env_vars
+
+  template_annotations = {
+    "autoscaling.knative.dev/minScale" = "0"
+    "autoscaling.knative.dev/maxScale" = tostring(var.max_scale)
+    "run.googleapis.com/client-name"   = "terraform"
+    "generated-by"                     = "terraform"
+  }
+
+  startup_probe = {
+    failure_threshold     = 3
+    initial_delay_seconds = 0
+    timeout_seconds       = 5
+    period_seconds        = 10
+    http_get = {
+      path = "/health"
+    }
+  }
+
+  service_annotations = {
+    "run.googleapis.com/ingress" = "all"
+  }
+
+  depends_on = [google_project_service.required]
+}
+
+output "cloud_run_url" {
+  value = module.cloud_run.service_url
+}
+
+output "cloud_run_revision" {
+  value = module.cloud_run.revision
+}
