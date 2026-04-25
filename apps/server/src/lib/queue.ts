@@ -26,12 +26,10 @@ const pubsub = new PubSub({
 });
 
 export async function publishUploadMessage(msg: UploadMessage): Promise<void> {
-  await pubsub
-    .topic(env.PUBSUB_UPLOAD_TOPIC)
-    .publishMessage({
-      json: msg,
-      attributes: {
-        upload_id: msg.upload_id,
-      },
-    });
+  await pubsub.topic(env.PUBSUB_UPLOAD_TOPIC).publishMessage({
+    json: msg,
+    attributes: {
+      upload_id: msg.upload_id,
+    },
+  });
 }
