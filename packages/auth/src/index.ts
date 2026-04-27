@@ -35,11 +35,19 @@ export function createAuth() {
       autoSignInAfterVerification: true,
       expiresIn: 86400,
       async sendVerificationEmail({ user, url }) {
+        const token = new URL(url).searchParams.get("token");
+        const frontendUrl = `${env.FRONTEND_URL}/verify?token=${token}&callbackURL=/dashboard`;
         await sendVerificationEmail({
           email: user.email,
           name: user.name,
-          url,
+          url: frontendUrl,
         });
+      },
+    },
+    socialProviders: {
+      google: {
+        clientId: process.env.GOOGLE_CLIENT_ID as string,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       },
     },
     advanced: {

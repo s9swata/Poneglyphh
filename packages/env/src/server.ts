@@ -7,6 +7,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().min(1),
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.url(),
+    FRONTEND_URL: z.url(),
     CORS_ORIGIN: z.string().min(1),
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
     // Cloudflare R2 (S3-compatible)
@@ -32,6 +33,10 @@ export const env = createEnv({
     RESEND_FROM_NAME: z.string().min(1),
     // Internal callback secret for upload worker
     UPLOAD_CALLBACK_SECRET: z.string().min(1),
+
+    // Google OAuth
+    GOOGLE_CLIENT_ID: z.string().min(1),
+    GOOGLE_CLIENT_SECRET: z.string().min(1),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

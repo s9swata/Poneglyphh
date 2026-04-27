@@ -9,6 +9,10 @@ locals {
       value = var.better_auth_url
     },
     {
+      name  = "FRONTEND_URL"
+      value = var.cors_origin
+    },
+    {
       name  = "CORS_ORIGIN"
       value = var.cors_origin
     },
@@ -75,6 +79,14 @@ locals {
     {
       name  = "UPLOAD_CALLBACK_SECRET"
       value = var.upload_callback_secret
+    },
+    {
+      name  = "GOOGLE_CLIENT_ID"
+      value = var.google_client_id
+    },
+    {
+      name  = "GOOGLE_CLIENT_SECRET"
+      value = var.google_client_secret
     },
     {
       name  = "PUBSUB_PROJECT_ID"

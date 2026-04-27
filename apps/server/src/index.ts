@@ -1,6 +1,5 @@
 import { logger, honoLogger } from "@/lib/logger";
 import { auth } from "@Poneglyph/auth";
-import { env } from "@Poneglyph/env/server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { authMiddleware } from "./middleware/auth";
