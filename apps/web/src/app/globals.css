@@ -1,7 +1,14 @@
-
-
 @import "@Poneglyph/ui/globals.css";
 @plugin "@tailwindcss/typography";
+
+@layer base {
+  a {
+    color: oklch(0.6 0.2 250);
+  }
+  a:hover {
+    color: oklch(0.55 0.22 253);
+  }
+}
 
 @keyframes sky-gradient {
   0% {
