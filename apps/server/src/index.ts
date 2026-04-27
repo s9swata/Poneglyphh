@@ -19,7 +19,7 @@ app.use(
 app.use(
   "/api/auth/*",
   cors({
-    origin: env.CORS_ORIGIN,
+    origin: "*",
     allowMethods: ["POST", "GET", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
     exposeHeaders: ["Content-Length"],
@@ -31,7 +31,7 @@ app.use(
 app.use(
   "/api/*",
   cors({
-    origin: env.CORS_ORIGIN,
+    origin: "*", // Have to change it later
     allowMethods: ["GET", "POST", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
     credentials: true,

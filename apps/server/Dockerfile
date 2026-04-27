@@ -40,7 +40,9 @@ FROM oven/bun:1.3.5-slim AS release
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
 COPY --from=prod-deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/apps/server/dist ./dist
+COPY --from=prod-deps /usr/src/app/apps/server/node_modules ./apps/server/node_modules
+COPY --from=build /usr/src/app/apps/server/dist ./apps/server/dist
+WORKDIR /usr/src/app/apps/server
 USER bun
-EXPOSE 3000/tcp
+EXPOSE 8080/tcp
 CMD ["bun", "dist/index.mjs"]
