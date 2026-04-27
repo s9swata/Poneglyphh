@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { apiClient } from "@/lib/api-client";
 import type { DatasetListItem, PaginatedResponse } from "@/lib/types";
 

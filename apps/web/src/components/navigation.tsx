@@ -1,20 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Account } from "@/components/account";
 
 function IconMenu() {
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
       <path
         d="M3 5h12M3 9h12M3 13h12"
         stroke="currentColor"
@@ -27,58 +21,12 @@ function IconMenu() {
 
 function IconX() {
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      aria-hidden="true"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
       <path
         d="M4 4l10 10M14 4L4 14"
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function IconUser() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle cx="9" cy="5.5" r="3.25" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M3.5 15.5c0-3.038 2.463-5.5 5.5-5.5s5.5 2.462 5.5 5.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function IconChevronDown() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M3 5l4 4 4-4"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   );
@@ -110,14 +58,11 @@ export function Navigation() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [mobileOpen, setMobileOpen] = useState(false);
-  const router = useRouter();
- 
-  
+
   const { data: session, isPending: _isPending } = authClient.useSession();
   const user = session?.user;
   const isAuthenticated = !!user;
 
-  
   const [dark, setDark] = useState(!isHome);
 
   useEffect(() => {
@@ -136,7 +81,6 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", check);
   }, [isHome]);
 
-  
   useEffect(() => {
     //
   }, []);

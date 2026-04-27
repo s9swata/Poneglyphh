@@ -5,10 +5,10 @@ import { IconAlertTriangle, IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
 
 export default function DatasetDetailError({
-  error,
+  _error,
   reset,
 }: {
-  error: Error & { digest?: string };
+  _error: Error & { digest?: string };
   reset: () => void;
 }) {
   return (

@@ -4,10 +4,10 @@ import { Button } from "@Poneglyph/ui/components/button";
 import { IconAlertTriangle } from "@tabler/icons-react";
 
 export default function DiscoverError({
-  error,
+  _error,
   reset,
 }: {
-  error: Error & { digest?: string };
+  _error: Error & { digest?: string };
   reset: () => void;
 }) {
   return (

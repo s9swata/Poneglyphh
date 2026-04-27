@@ -101,7 +101,7 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
               setLoading(false);
               alert(ctx.error.message || "Invalid email or password");
             },
-          }
+          },
         );
       } else {
         await authClient.signUp.email(
@@ -119,10 +119,10 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
               setLoading(false);
               alert(ctx.error.message || "Failed to create account");
             },
-          }
+          },
         );
       }
-    } catch (_err) {
+    } catch {
       setLoading(false);
       alert("Something went wrong. Please try again.");
     }
@@ -251,12 +251,7 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                       <span className="check-text">Keep me signed in for 30 days</span>
                     </label>
 
-                    <button
-                      className="btn"
-                      type="submit"
-                      data-loading={loading}
-                      disabled={loading}
-                    >
+                    <button className="btn" type="submit" data-loading={loading} disabled={loading}>
                       <span className="btn-spin" />
                       <span className="btn-label">
                         <span className="btn-label-row">Sign in</span>
@@ -343,21 +338,19 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
                         <IconCheck />
                       </span>
                       <span className="check-text">
-                        I agree to the <Link href="#">Terms</Link> and <Link href="#">Privacy Policy</Link>.
+                        I agree to the <Link href="#">Terms</Link> and{" "}
+                        <Link href="#">Privacy Policy</Link>.
                         {suErrors.terms && (
-                          <span style={{ color: "var(--destructive)", display: "block", marginTop: 2 }}>
+                          <span
+                            style={{ color: "var(--destructive)", display: "block", marginTop: 2 }}
+                          >
                             {suErrors.terms}
                           </span>
                         )}
                       </span>
                     </label>
 
-                    <button
-                      className="btn"
-                      type="submit"
-                      data-loading={loading}
-                      disabled={loading}
-                    >
+                    <button className="btn" type="submit" data-loading={loading} disabled={loading}>
                       <span className="btn-spin" />
                       <span className="btn-label">
                         <span className="btn-label-row">Create account</span>
@@ -370,13 +363,31 @@ export function AuthForm({ initialTab }: { initialTab: "signin" | "signup" }) {
 
               <div className="divider">or continue with</div>
               <div className="oauth-row">
-                <button className="btn btn-ghost" type="button" onClick={() => authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" })}>
+                <button
+                  className="btn btn-ghost"
+                  type="button"
+                  onClick={() =>
+                    authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" })
+                  }
+                >
                   <IconBrandGoogleFilled size={16} color="#4285F4" />
                 </button>
-                <button className="btn btn-ghost" type="button" onClick={() => authClient.signIn.social({ provider: "github", callbackURL: "/dashboard" })}>
+                <button
+                  className="btn btn-ghost"
+                  type="button"
+                  onClick={() =>
+                    authClient.signIn.social({ provider: "github", callbackURL: "/dashboard" })
+                  }
+                >
                   <IconBrandGithubFilled size={16} />
                 </button>
-                <button className="btn btn-ghost" type="button" onClick={() => authClient.signIn.social({ provider: "apple", callbackURL: "/dashboard" })}>
+                <button
+                  className="btn btn-ghost"
+                  type="button"
+                  onClick={() =>
+                    authClient.signIn.social({ provider: "apple", callbackURL: "/dashboard" })
+                  }
+                >
                   <IconBrandAppleFilled size={16} />
                 </button>
               </div>

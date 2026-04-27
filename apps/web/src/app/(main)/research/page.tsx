@@ -65,11 +65,15 @@ function genId() {
 
 function toolToStep(toolName: string): { title: string; detail: string } {
   const n = toolName.toLowerCase();
-  if (n.includes("web") && n.includes("search")) return { title: "Searched the web", detail: `web.search · "${toolName}"` };
+  if (n.includes("web") && n.includes("search"))
+    return { title: "Searched the web", detail: `web.search · "${toolName}"` };
   if (n.includes("search")) return { title: "Searching sources", detail: `search · "${toolName}"` };
-  if (n.includes("fetch") || n.includes("browse") || n.includes("read")) return { title: "Read sources", detail: `browser.fetch · ${toolName}` };
-  if (n.includes("file") || n.includes("workspace")) return { title: "Searched workspace", detail: `files.search · ${toolName}` };
-  if (n.includes("think") || n.includes("plan")) return { title: "Planning the research", detail: `decompose · ${toolName}` };
+  if (n.includes("fetch") || n.includes("browse") || n.includes("read"))
+    return { title: "Read sources", detail: `browser.fetch · ${toolName}` };
+  if (n.includes("file") || n.includes("workspace"))
+    return { title: "Searched workspace", detail: `files.search · ${toolName}` };
+  if (n.includes("think") || n.includes("plan"))
+    return { title: "Planning the research", detail: `decompose · ${toolName}` };
   return { title: `Using ${toolName}`, detail: toolName };
 }
 
@@ -105,11 +109,16 @@ async function* parseSSE(response: Response): AsyncGenerator<UIChunk> {
 
 function StepIcon({ title }: { title: string }) {
   const t = title.toLowerCase();
-  if (t.includes("plan") || t.includes("think")) return <IconBulb style={{ width: 11, height: 11 }} />;
-  if (t.includes("web") || t.includes("search")) return <IconSearch style={{ width: 11, height: 11 }} />;
-  if (t.includes("read") || t.includes("source") || t.includes("fetch")) return <IconFile style={{ width: 11, height: 11 }} />;
-  if (t.includes("workspace") || t.includes("file")) return <IconFolder style={{ width: 11, height: 11 }} />;
-  if (t.includes("cross") || t.includes("verify") || t.includes("check")) return <IconActivity style={{ width: 11, height: 11 }} />;
+  if (t.includes("plan") || t.includes("think"))
+    return <IconBulb style={{ width: 11, height: 11 }} />;
+  if (t.includes("web") || t.includes("search"))
+    return <IconSearch style={{ width: 11, height: 11 }} />;
+  if (t.includes("read") || t.includes("source") || t.includes("fetch"))
+    return <IconFile style={{ width: 11, height: 11 }} />;
+  if (t.includes("workspace") || t.includes("file"))
+    return <IconFolder style={{ width: 11, height: 11 }} />;
+  if (t.includes("cross") || t.includes("verify") || t.includes("check"))
+    return <IconActivity style={{ width: 11, height: 11 }} />;
   return <IconArrowRight style={{ width: 11, height: 11 }} />;
 }
 
@@ -128,7 +137,14 @@ function StepItem({
   const isActive = step.state === "active";
 
   return (
-    <div style={{ position: "relative", paddingLeft: 26, paddingTop: 10, paddingBottom: isLast ? 0 : 10 }}>
+    <div
+      style={{
+        position: "relative",
+        paddingLeft: 26,
+        paddingTop: 10,
+        paddingBottom: isLast ? 0 : 10,
+      }}
+    >
       {/* Connector line */}
       {!isLast && (
         <div
@@ -138,7 +154,8 @@ function StepItem({
             top: 34,
             bottom: 0,
             width: 1,
-            background: "linear-gradient(to bottom, var(--border) 0%, var(--border) 92%, transparent)",
+            background:
+              "linear-gradient(to bottom, var(--border) 0%, var(--border) 92%, transparent)",
           }}
         />
       )}
@@ -155,22 +172,24 @@ function StepItem({
           background: isActive
             ? "var(--primary)"
             : isDone
-            ? "color-mix(in oklch, var(--primary) 18%, var(--card))"
-            : "var(--card)",
+              ? "color-mix(in oklch, var(--primary) 18%, var(--card))"
+              : "var(--card)",
           border: isActive
             ? "1px solid var(--primary)"
             : isDone
-            ? "1px solid color-mix(in oklch, var(--primary) 30%, var(--border))"
-            : "1px solid var(--border)",
+              ? "1px solid color-mix(in oklch, var(--primary) 30%, var(--border))"
+              : "1px solid var(--border)",
           display: "grid",
           placeItems: "center",
           color: isActive
             ? "var(--primary-foreground)"
             : isDone
-            ? "color-mix(in oklch, var(--primary) 35%, var(--foreground))"
-            : "var(--muted-foreground)",
+              ? "color-mix(in oklch, var(--primary) 35%, var(--foreground))"
+              : "var(--muted-foreground)",
           zIndex: 1,
-          boxShadow: isActive ? "0 0 0 4px color-mix(in oklch, var(--primary) 22%, transparent)" : "none",
+          boxShadow: isActive
+            ? "0 0 0 4px color-mix(in oklch, var(--primary) 22%, transparent)"
+            : "none",
         }}
       >
         {isActive && (
@@ -198,7 +217,9 @@ function StepItem({
           userSelect: "none",
         }}
       >
-        <span style={{ fontSize: "13.5px", fontWeight: 500, color: "var(--foreground)", flexShrink: 0 }}>
+        <span
+          style={{ fontSize: "13.5px", fontWeight: 500, color: "var(--foreground)", flexShrink: 0 }}
+        >
           {step.title}
         </span>
         <span
@@ -254,7 +275,8 @@ function StepItem({
           background: "color-mix(in oklch, var(--muted) 60%, var(--background))",
           border: step.open ? "1px solid var(--border)" : "0px solid var(--border)",
           borderRadius: "calc(var(--radius) * 0.8)",
-          transition: "max-height 280ms ease, padding 200ms ease, border-width 200ms ease, margin 200ms ease",
+          transition:
+            "max-height 280ms ease, padding 200ms ease, border-width 200ms ease, margin 200ms ease",
           fontSize: 13,
           color: "var(--muted-foreground)",
           fontStyle: "italic",
@@ -283,7 +305,7 @@ function ThreadPair({
   isFirst: boolean;
 }) {
   const stepCount = assistantMsg?.steps.length ?? 0;
-  const sourcesCount = 0; // server doesn't provide sources yet
+  const _sourcesCount = 0; // server doesn't provide sources yet
   const timeLabel = (() => {
     if (!assistantMsg?.steps.length) return null;
     const first = assistantMsg.steps[0]?.startedAt;
@@ -299,16 +321,18 @@ function ThreadPair({
     <div style={{ marginBottom: isFirst ? 0 : 48 }}>
       {/* Query heading */}
       <h1
-        style={{
-          fontFamily: "var(--font-heading)",
-          fontWeight: 400,
-          fontSize: 38,
-          lineHeight: 1.2,
-          letterSpacing: "-0.015em",
-          margin: "0 0 10px",
-          textWrap: "pretty",
-          color: "var(--foreground)",
-        } as React.CSSProperties}
+        style={
+          {
+            fontFamily: "var(--font-heading)",
+            fontWeight: 400,
+            fontSize: 38,
+            lineHeight: 1.2,
+            letterSpacing: "-0.015em",
+            margin: "0 0 10px",
+            textWrap: "pretty",
+            color: "var(--foreground)",
+          } as React.CSSProperties
+        }
       >
         {userMsg.text}
       </h1>
@@ -436,7 +460,8 @@ function ThreadPair({
                 top: 8,
                 bottom: 8,
                 width: 1,
-                background: "linear-gradient(to bottom, var(--border) 0%, var(--border) 92%, transparent)",
+                background:
+                  "linear-gradient(to bottom, var(--border) 0%, var(--border) 92%, transparent)",
                 pointerEvents: "none",
               }}
             />
@@ -488,9 +513,7 @@ function ThreadPair({
           >
             {assistantMsg.text ? (
               <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-3 prose-headings:mt-6 prose-headings:mb-2 prose-headings:font-semibold prose-headings:text-base prose-li:my-1 prose-code:text-xs prose-pre:text-xs prose-a:text-primary hover:prose-a:underline prose-li:marker:text-primary">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {assistantMsg.text}
-                </ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{assistantMsg.text}</ReactMarkdown>
               </div>
             ) : null}
             {assistantMsg.isStreaming && (
@@ -586,33 +609,35 @@ export default function ResearchPage() {
     [],
   );
 
-  const toggleStep = useCallback((msgId: string, stepId: string) => {
-    setSessions((prev) =>
-      prev.map((s) =>
-        s.id !== activeSessionId
-          ? s
-          : {
-              ...s,
-              messages: s.messages.map((m) =>
-                m.id !== msgId
-                  ? m
-                  : {
-                      ...m,
-                      steps: m.steps.map((st) =>
-                        st.id === stepId ? { ...st, open: !st.open } : st,
-                      ),
-                    },
-              ),
-            },
-      ),
-    );
-  }, [activeSessionId]);
+  const toggleStep = useCallback(
+    (msgId: string, stepId: string) => {
+      setSessions((prev) =>
+        prev.map((s) =>
+          s.id !== activeSessionId
+            ? s
+            : {
+                ...s,
+                messages: s.messages.map((m) =>
+                  m.id !== msgId
+                    ? m
+                    : {
+                        ...m,
+                        steps: m.steps.map((st) =>
+                          st.id === stepId ? { ...st, open: !st.open } : st,
+                        ),
+                      },
+                ),
+              },
+        ),
+      );
+    },
+    [activeSessionId],
+  );
 
   const sendMessage = useCallback(
     async (text: string) => {
       let sessionId = activeSessionId;
-      const prevMessages =
-        sessionsRef.current.find((s) => s.id === sessionId)?.messages ?? [];
+      const prevMessages = sessionsRef.current.find((s) => s.id === sessionId)?.messages ?? [];
 
       if (!sessionId) {
         sessionId = genId();
@@ -692,7 +717,11 @@ export default function ResearchPage() {
             }));
             scrollToBottom();
           } else if (chunk.type === "tool-input-available") {
-            const c = chunk as { type: "tool-input-available"; toolCallId: string; toolName: string };
+            const c = chunk as {
+              type: "tool-input-available";
+              toolCallId: string;
+              toolName: string;
+            };
             const { title, detail } = toolToStep(c.toolName);
             const stepId = genId();
             const now = Date.now();
@@ -719,9 +748,7 @@ export default function ResearchPage() {
             updateAssistantMsg(sessionId!, assistantMsgId, (m) => ({
               ...m,
               steps: m.steps.map((st) =>
-                st.toolCallId === c.toolCallId
-                  ? { ...st, state: "done" as const, elapsed }
-                  : st,
+                st.toolCallId === c.toolCallId ? { ...st, state: "done" as const, elapsed } : st,
               ),
             }));
           } else if (chunk.type === "error") {
@@ -811,7 +838,15 @@ export default function ResearchPage() {
               gap: 24,
             }}
           >
-            <div style={{ position: "relative", width: 96, height: 96, display: "grid", placeItems: "center" }}>
+            <div
+              style={{
+                position: "relative",
+                width: 96,
+                height: 96,
+                display: "grid",
+                placeItems: "center",
+              }}
+            >
               <div
                 style={{
                   position: "absolute",
@@ -871,13 +906,15 @@ export default function ResearchPage() {
                 </em>
               </h1>
               <p
-                style={{
-                  color: "var(--muted-foreground)",
-                  fontSize: 15,
-                  lineHeight: 1.55,
-                  margin: 0,
-                  textWrap: "pretty",
-                } as React.CSSProperties}
+                style={
+                  {
+                    color: "var(--muted-foreground)",
+                    fontSize: 15,
+                    lineHeight: 1.55,
+                    margin: 0,
+                    textWrap: "pretty",
+                  } as React.CSSProperties
+                }
               >
                 Ask anything — the agent searches datasets, the web, and runs deep research.
               </p>
@@ -937,7 +974,8 @@ export default function ResearchPage() {
                     }}
                     onMouseLeave={(e) => {
                       (e.currentTarget as HTMLButtonElement).style.background = "var(--card)";
-                      (e.currentTarget as HTMLButtonElement).style.color = "var(--muted-foreground)";
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        "var(--muted-foreground)";
                     }}
                   >
                     {icon}
