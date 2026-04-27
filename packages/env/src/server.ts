@@ -15,9 +15,9 @@ export const env = createEnv({
     S3_BUCKET_NAME: z.string().min(1),
     S3_ENDPOINT: z.url(),
     S3_REGION: z.string().default("auto"),
-    // RabbitMQ
-    RABBITMQ_URL: z.string().min(1),
-    RABBITMQ_QUEUE: z.string().min(1),
+    // Upload processing queue
+    PUBSUB_PROJECT_ID: z.string().min(1),
+    PUBSUB_UPLOAD_TOPIC: z.string().min(1),
     // AI Providers
     GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
     GROQ_API_KEY: z.string().min(1),

@@ -100,7 +100,7 @@ uploadRouter.post("/", requireAuth, zValidator("form", UploadRequestSchema), asy
     tags,
     attachments,
     thumbnail_s3_key: thumbnailS3Key,
-    callback_url: `${c.req.url.split("/api/")[0]}/api/upload/callback`,
+    callback_url: new URL("/api/upload/callback", env.BETTER_AUTH_URL).toString(),
   });
 
   log.info("Upload queued: upload_id={uploadId}", { uploadId });

@@ -1,15 +1,6 @@
 use anyhow::{Context, Result};
 use bytes::Bytes;
 use calamine::{open_workbook_from_rs, Reader, Xlsx};
-use lapin::{
-    options::{
-        BasicAckOptions, BasicConsumeOptions, BasicNackOptions, BasicPublishOptions,
-        BasicQosOptions, QueueDeclareOptions,
-    },
-    types::FieldTable,
-    Connection, ConnectionProperties,
-};
-
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use std::io::Cursor;
@@ -29,8 +20,6 @@ pub struct UploadMessage {
     pub attachments: Vec<AttachmentInfo>,
     pub thumbnail_s3_key: Option<String>,
     pub callback_url: String,
-    #[serde(default)]
-    pub _retry: u32,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -50,173 +39,26 @@ struct CallbackPayload {
     error: Option<String>,
 }
 
-pub async fn run_consumer(pool: PgPool) -> Result<()> {
+pub async fn process_upload(pool: &PgPool, msg: UploadMessage) -> Result<Uuid> {
     let cfg = &*config::CONFIG;
-
-    tracing::info!("Connecting to RabbitMQ...");
-    let conn = Connection::connect(&cfg.rabbitmq_url, ConnectionProperties::default())
-        .await
-        .context("Failed to connect to RabbitMQ")?;
-
-    let channel = conn
-        .create_channel()
-        .await
-        .context("Failed to create channel")?;
-
-    channel
-        .basic_qos(cfg.rabbitmq_prefetch, BasicQosOptions::default())
-        .await
-        .context("Failed to set QoS")?;
-
-    channel
-        .queue_declare(
-            &cfg.rabbitmq_queue,
-            QueueDeclareOptions {
-                durable: true,
-                ..Default::default()
-            },
-            FieldTable::default(),
-        )
-        .await
-        .context("Failed to declare main queue")?;
-
-    channel
-        .queue_declare(
-            &cfg.rabbitmq_failed_queue,
-            QueueDeclareOptions {
-                durable: true,
-                ..Default::default()
-            },
-            FieldTable::default(),
-        )
-        .await
-        .context("Failed to declare failed queue")?;
-
-    let mut consumer = channel
-        .basic_consume(
-            &cfg.rabbitmq_queue,
-            "upload-consumer",
-            BasicConsumeOptions::default(),
-            FieldTable::default(),
-        )
-        .await
-        .context("Failed to start consumer")?;
-
-    tracing::info!(
-        "Listening on queue '{}' (failed queue: '{}')",
-        cfg.rabbitmq_queue,
-        cfg.rabbitmq_failed_queue
-    );
-
-    use futures::StreamExt;
-    while let Some(delivery) = consumer.next().await {
-        let delivery = match delivery {
-            Ok(d) => d,
-            Err(e) => {
-                tracing::error!("Delivery error: {}", e);
-                continue;
-            }
-        };
-
-        let data_bytes = delivery.data.clone();
-
-        let msg: UploadMessage = match serde_json::from_slice(&data_bytes) {
-            Ok(m) => m,
-            Err(e) => {
-                tracing::error!("Failed to parse upload message: {}", e);
-                let _ = delivery
-                    .nack(BasicNackOptions {
-                        requeue: false,
-                        ..Default::default()
-                    })
-                    .await;
-                continue;
-            }
-        };
-
-        let retry_count = msg._retry;
-
-        tracing::info!(
-            "Processing upload_id={} (retry={})",
-            msg.upload_id,
-            retry_count
-        );
-
-        match process_upload(&pool, msg).await {
-            Ok(_) => {
-                let _ = delivery.ack(BasicAckOptions::default()).await;
-            }
-            Err(e) => {
-                tracing::error!("Upload processing failed: {:?} (retry={})", e, retry_count);
-
-                let mut retry_msg: UploadMessage = serde_json::from_slice(&data_bytes).unwrap();
-                retry_msg._retry = retry_count + 1;
-                let payload = serde_json::to_vec(&retry_msg).unwrap_or_default();
-
-                if retry_count < 2 {
-                    tracing::warn!(
-                        "Retrying upload_id={} (attempt {}/2)",
-                        retry_msg.upload_id,
-                        retry_count + 1
-                    );
-                    let _ = channel
-                        .basic_publish(
-                            "",
-                            &cfg.rabbitmq_queue,
-                            BasicPublishOptions::default(),
-                            &payload,
-                            lapin::BasicProperties::default()
-                                .with_content_type("application/json".into())
-                                .with_delivery_mode(2),
-                        )
-                        .await;
-                } else {
-                    tracing::error!(
-                        "Max retries exceeded for upload_id={}, sending to failed queue",
-                        retry_msg.upload_id
-                    );
-                    let _ = channel
-                        .basic_publish(
-                            "",
-                            &cfg.rabbitmq_failed_queue,
-                            BasicPublishOptions::default(),
-                            &payload,
-                            lapin::BasicProperties::default()
-                                .with_content_type("application/json".into())
-                                .with_delivery_mode(2),
-                        )
-                        .await;
-                }
-
-                let _ = delivery.ack(BasicAckOptions::default()).await;
-            }
-        }
-    }
-
-    Ok(())
-}
-
-async fn process_upload(pool: &PgPool, msg: UploadMessage) -> Result<()> {
-    let cfg = &*config::CONFIG;
+    let upload_external_id = format!("upload:{}", msg.upload_id);
 
     let user_id: Option<&str> = if msg.user_id == "anonymous" || msg.user_id.is_empty() {
         None
     } else {
         Some(msg.user_id.as_str())
     };
+
     let source_id = db::insert_source_for_upload(pool, user_id, &msg.title)
         .await
         .context("Failed to insert source")?;
 
     let s3_keys: Vec<String> = msg.attachments.iter().map(|a| a.s3_key.clone()).collect();
-    let file_types: Vec<String> = msg
-        .attachments
-        .iter()
-        .map(|a| a.file_type.clone())
-        .collect();
+    let file_types: Vec<String> = msg.attachments.iter().map(|a| a.file_type.clone()).collect();
 
     let dataset_id = db::insert_upload_dataset(
         pool,
+        &upload_external_id,
         source_id,
         &msg.title,
         &msg.description,
@@ -227,7 +69,7 @@ async fn process_upload(pool: &PgPool, msg: UploadMessage) -> Result<()> {
         msg.thumbnail_s3_key.as_deref(),
     )
     .await
-    .context("Failed to insert dataset")?;
+    .context("Failed to insert upload dataset")?;
 
     let text = build_text_for_embedding(&msg);
     let text_vec = embed::embed_text_with_retry(&text, &cfg.gemini_api_key)
@@ -270,10 +112,11 @@ async fn process_upload(pool: &PgPool, msg: UploadMessage) -> Result<()> {
     }
 
     let callback_url = if msg.callback_url.is_empty() {
-        cfg.server_callback_url.clone().unwrap_or_default()
+        cfg.server_callback_url.clone()
     } else {
         msg.callback_url.clone()
     };
+
     notify_server(&callback_url, &msg.upload_id, dataset_id, None).await;
 
     tracing::info!(
@@ -282,7 +125,7 @@ async fn process_upload(pool: &PgPool, msg: UploadMessage) -> Result<()> {
         dataset_id
     );
 
-    Ok(())
+    Ok(dataset_id)
 }
 
 fn build_text_for_embedding(msg: &UploadMessage) -> String {
@@ -544,7 +387,10 @@ async fn notify_server(callback_url: &str, upload_id: &str, dataset_id: Uuid, er
         .filter(|s| !s.is_empty())
         .expect("UPLOAD_CALLBACK_SECRET must be set and non-empty");
 
-    let mut req = HTTP.post(callback_url).json(&payload).header("x-upload-callback-secret", secret);
+    let req = HTTP
+        .post(callback_url)
+        .json(&payload)
+        .header("x-upload-callback-secret", secret);
 
     match req.send().await {
         Ok(resp) if resp.status().is_success() => {

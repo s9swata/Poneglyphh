@@ -128,6 +128,7 @@ pub async fn insert_source_for_upload(
 
 pub async fn insert_upload_dataset(
     pool: &PgPool,
+    external_id: &str,
     source_id: Uuid,
     title: &str,
     description: &str,
@@ -140,13 +141,15 @@ pub async fn insert_upload_dataset(
     let row = sqlx::query(
         r#"
         INSERT INTO datasets
-            (source_id, title, description, summary, publisher,
+            (external_id, source_id, title, description, summary, publisher,
              s3_keys, file_types, thumbnail_s3_key, dataset_status)
-        VALUES ($1, $2, $3, $4, $5, $6, $7::file_type[], $8, 'pending')
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8::file_type[], $9, 'pending')
+        ON CONFLICT (external_id) DO NOTHING
         RETURNING id
         "#,
     )
     .persistent(false)
+    .bind(external_id)
     .bind(source_id)
     .bind(title)
     .bind(description)
@@ -155,9 +158,20 @@ pub async fn insert_upload_dataset(
     .bind(s3_keys)
     .bind(file_types)
     .bind(thumbnail_s3_key)
-    .fetch_one(pool)
+    .fetch_optional(pool)
     .await
     .context("Failed to insert upload dataset")?;
+
+    if let Some(row) = row {
+        return Ok(row.get("id"));
+    }
+
+    let row = sqlx::query("SELECT id FROM datasets WHERE external_id = $1")
+        .persistent(false)
+        .bind(external_id)
+        .fetch_one(pool)
+        .await
+        .context("Failed to fetch existing upload dataset")?;
 
     Ok(row.get("id"))
 }
