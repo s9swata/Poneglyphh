@@ -981,7 +981,7 @@ export default function ResearchPage() {
         display: "grid",
         gridTemplateColumns: "240px 1fr",
         alignItems: "stretch",
-        minHeight: "100vh",
+        height: "100%",
         background: "var(--background)",
         color: "var(--foreground)",
         fontSize: 14,
@@ -999,13 +999,21 @@ export default function ResearchPage() {
       />
 
       <main
+        ref={scrollRef}
         style={{
-          maxWidth: 920,
-          width: "100%",
-          margin: "0 auto",
-          padding: "32px 40px 160px",
+          height: "100%",
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
       >
+        <div
+          style={{
+            maxWidth: 920,
+            width: "100%",
+            margin: "0 auto",
+            padding: "32px 40px 160px",
+          }}
+        >
         {!hasMessages ? (
           /* ---- Empty state ---- */
           <div
@@ -1166,7 +1174,7 @@ export default function ResearchPage() {
             </div>
 
             {/* ---- Thread message pairs ---- */}
-            <div ref={scrollRef}>
+            <div>
               {messagePairs.map((pair, idx) => (
                 <ThreadPair
                   key={pair.user.id}
@@ -1180,6 +1188,7 @@ export default function ResearchPage() {
             </div>
           </>
         )}
+        </div>
       </main>
 
       {/* ---- Composer ---- */}

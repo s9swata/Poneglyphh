@@ -199,10 +199,8 @@ export function ResearchSidebar({
     >
       <div
         style={{
-          position: "sticky",
-          top: 0,
-          height: "100vh",
-          overflowY: "auto",
+          height: "100%",
+          overflowY: "hidden",
           padding: "18px 14px",
           display: "flex",
           flexDirection: "column",
