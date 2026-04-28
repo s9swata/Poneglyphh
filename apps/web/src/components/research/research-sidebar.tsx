@@ -192,16 +192,23 @@ export function ResearchSidebar({
       style={{
         borderRight: "1px solid var(--border)",
         background: "color-mix(in oklch, var(--muted) 50%, var(--background))",
-        padding: "18px 14px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 4,
-        position: "sticky",
-        top: 0,
-        height: "100vh",
-        overflowY: "auto",
+        /* Stretches to match the full content column height so the
+           background fills the page; the inner div handles sticky + scroll */
+        alignSelf: "stretch",
       }}
     >
+      <div
+        style={{
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          overflowY: "auto",
+          padding: "18px 14px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
       {/* Brand */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 10px 18px" }}>
         <div
@@ -387,6 +394,7 @@ export function ResearchSidebar({
           <div style={{ fontSize: 11, color: "var(--muted-foreground)" }}>Research Agent</div>
         </div>
       </div>
+    </div>
     </aside>
   );
 }

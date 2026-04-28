@@ -858,7 +858,7 @@ export default function ResearchPage() {
       style={{
         display: "grid",
         gridTemplateColumns: "240px 1fr",
-        alignItems: "start",
+        alignItems: "stretch",
         minHeight: "100vh",
         background: "var(--background)",
         color: "var(--foreground)",

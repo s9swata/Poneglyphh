@@ -38,20 +38,24 @@ export function D3Renderer({ code, data, className }: D3RendererProps) {
       const height = Math.max(el.clientHeight, 400);
 
       // Wrap user code in a function with injected scope variables.
-      // The outer block `{}` means any `const/let data` inside the AI code
-      // creates a new block-scoped binding (shadowing the parameter) rather
-      // than throwing "Identifier 'data' has already been declared".
+      // chart/svg/g are pre-declared as params so AI code that references
+      // them without declaring gets a valid (null) binding instead of a
+      // ReferenceError. The inner `{}` block lets AI code re-declare these
+      // with const/let (shadowing the param) without a conflict.
       const run = new Function(
         "d3",
         "container",
         "width",
         "height",
         "data",
+        "chart",
+        "svg",
+        "g",
         `{
         ${code}
       }`,
       );
-      run(d3, el, width, height, data ?? []);
+      run(d3, el, width, height, data ?? [], null, null, null);
     } catch (err: any) {
       console.error("D3 execution error:", err);
       setError(err?.message ?? "Failed to render chart");
