@@ -8,6 +8,15 @@ import { DatasetItem, type Dataset } from "./components/dataset-item";
 import { ActivityItem, type Activity } from "./components/activity-item";
 import { IconSearch, IconBell, IconPlus, IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return "Good morning";
+  if (h >= 12 && h < 17) return "Good afternoon";
+  if (h >= 17 && h < 21) return "Good evening";
+  return "Good night";
+}
 
 const MOCK_REPORTS: Report[] = [
   {
@@ -195,13 +204,16 @@ const MOCK_ACTIVITIES: Activity[] = [
 ];
 
 export default function DashboardPage() {
+  const { data: session } = authClient.useSession();
+  const firstName = session?.user?.name?.split(" ")[0] ?? "there";
+
   return (
     <main className="dashboard-main">
       {/* Top Section */}
       <header className="top">
         <div>
           <h1 className="hello">
-            Good afternoon, <em>Sarah</em>
+            {getGreeting()}, <em>{firstName}</em>
           </h1>
           <p className="lede">
             3 reports published this week, 4 surveys collecting responses, 12 datasets indexed.

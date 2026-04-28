@@ -116,12 +116,6 @@ export function Account({ variant = "default" }: { variant?: "default" | "transp
   return (
     <>
       <Link
-        href="/datasets/upload"
-        className={`text-sm font-medium transition-colors ${textColor} ${hoverBg} px-3 py-1.5 rounded-xl`}
-      >
-        Upload
-      </Link>
-      <Link
         href="/sign-in"
         className={
           isTransparent

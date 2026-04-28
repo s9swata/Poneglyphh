@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@Poneglyph/ui/components/button";
 import { Badge } from "@Poneglyph/ui/components/badge";
 import { Input } from "@Poneglyph/ui/components/input";
@@ -22,6 +22,7 @@ import type { Article } from "../components/article-card";
 import { env } from "@Poneglyph/env/web";
 import type { PaginatedResponse } from "@/lib/types";
 import type { DatasetListItem } from "@/lib/types";
+import { authClient } from "@/lib/auth-client";
 
 const ARTICLE_CATEGORIES: Record<string, string> = {
   "1": "Health",
@@ -177,9 +178,17 @@ interface Dataset {
 
 export default function ArticlePage() {
   const params = useParams<{ id: string }>();
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
   const [urlCopied, setUrlCopied] = useState(false);
   const [datasets, setDatasets] = useState<Dataset[]>([]);
   const [datasetsLoading, setDatasetsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isPending && !session?.user) {
+      router.replace("/sign-in");
+    }
+  }, [isPending, session, router]);
 
   useEffect(() => {
     async function fetchDatasets() {
@@ -199,6 +208,10 @@ export default function ArticlePage() {
     }
     fetchDatasets();
   }, []);
+
+  if (isPending || !session?.user) {
+    return null;
+  }
 
   const article = sampleArticles.find((a) => a.id === params.id);
 

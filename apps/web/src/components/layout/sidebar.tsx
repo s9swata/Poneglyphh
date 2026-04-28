@@ -13,6 +13,7 @@ import {
   IconInfoCircle,
   IconMail,
   IconLogin,
+  IconLogout,
 } from "@tabler/icons-react";
 import { authClient } from "@/lib/auth-client";
 
@@ -20,6 +21,11 @@ export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
   const user = session?.user;
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    window.location.href = "/";
+  };
 
   const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: IconLayoutDashboard },
@@ -92,10 +98,17 @@ export function Sidebar() {
         {user ? (
           <div className="sidebar-footer">
             <div className="avatar">{user.name?.charAt(0) || user.email.charAt(0)}</div>
-            <div className="flex flex-col overflow-hidden">
+            <div className="flex flex-col overflow-hidden flex-1 min-w-0">
               <div className="user-name truncate">{user.name || "User"}</div>
               <div className="user-plan truncate text-xs opacity-60">{user.email}</div>
             </div>
+            <button
+              onClick={handleSignOut}
+              className="shrink-0 p-1.5 rounded-md opacity-50 hover:opacity-100 transition-opacity"
+              aria-label="Sign out"
+            >
+              <IconLogout size={16} />
+            </button>
           </div>
         ) : (
           <Link href="/sign-in" className="nav-item">
