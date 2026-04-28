@@ -60,6 +60,122 @@ type UIChunk =
   | { type: "error"; errorText: string }
   | { type: string };
 
+// ---- Hardcoded insights visualization ----
+
+const INSIGHTS_D3_CODE = `
+const margin = { top: 28, right: 48, bottom: 44, left: 148 };
+const w = width - margin.left - margin.right;
+const h = height - margin.top - margin.bottom;
+
+const dataset = [
+  { label: "Health Access",     value: 73 },
+  { label: "Education Rate",    value: 61 },
+  { label: "Clean Water",       value: 55 },
+  { label: "Food Security",     value: 48 },
+  { label: "Digital Inclusion", value: 42 },
+  { label: "Gender Equality",   value: 38 },
+  { label: "Youth Employment",  value: 31 },
+];
+
+const svg = d3.select(container)
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height)
+  .style("font-family", "var(--font-sans, system-ui, sans-serif)");
+
+const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+const x = d3.scaleLinear().domain([0, 100]).range([0, w]).nice();
+const y = d3.scaleBand().domain(dataset.map(function(d){ return d.label; })).range([0, h]).padding(0.38);
+
+const color = d3.scaleSequential().domain([0, dataset.length - 1]).interpolator(d3.interpolateCool);
+
+// Grid lines
+g.append("g")
+  .attr("stroke", "currentColor")
+  .attr("stroke-opacity", 0.07)
+  .selectAll("line")
+  .data(x.ticks(5))
+  .join("line")
+  .attr("x1", function(d){ return x(d); })
+  .attr("x2", function(d){ return x(d); })
+  .attr("y1", 0)
+  .attr("y2", h);
+
+// Track (background bar)
+g.selectAll(".track")
+  .data(dataset)
+  .join("rect")
+  .attr("class", "track")
+  .attr("x", 0)
+  .attr("y", function(d){ return y(d.label); })
+  .attr("width", w)
+  .attr("height", y.bandwidth())
+  .attr("fill", "currentColor")
+  .attr("opacity", 0.04)
+  .attr("rx", 6);
+
+// Value bars
+g.selectAll(".bar")
+  .data(dataset)
+  .join("rect")
+  .attr("class", "bar")
+  .attr("x", 0)
+  .attr("y", function(d){ return y(d.label); })
+  .attr("width", function(d){ return x(d.value); })
+  .attr("height", y.bandwidth())
+  .attr("fill", function(d, i){ return color(i); })
+  .attr("rx", 6)
+  .attr("opacity", 0.88);
+
+// Value labels
+g.selectAll(".val-label")
+  .data(dataset)
+  .join("text")
+  .attr("class", "val-label")
+  .attr("x", function(d){ return x(d.value) + 8; })
+  .attr("y", function(d){ return y(d.label) + y.bandwidth() / 2; })
+  .attr("dy", "0.35em")
+  .attr("font-size", "12px")
+  .attr("fill", "currentColor")
+  .attr("opacity", 0.65)
+  .text(function(d){ return d.value + "%"; });
+
+// Y axis
+g.append("g")
+  .call(d3.axisLeft(y).tickSize(0).tickPadding(12))
+  .call(function(axis){ axis.select(".domain").remove(); })
+  .selectAll("text")
+  .attr("font-size", "13px")
+  .attr("fill", "currentColor");
+
+// X axis
+g.append("g")
+  .attr("transform", "translate(0," + h + ")")
+  .call(d3.axisBottom(x).ticks(5).tickFormat(function(d){ return d + "%"; }).tickSize(-h))
+  .call(function(axis){ axis.select(".domain").remove(); })
+  .selectAll("text")
+  .attr("font-size", "11px")
+  .attr("fill", "currentColor")
+  .attr("opacity", 0.5);
+
+g.selectAll(".tick line")
+  .attr("stroke", "currentColor")
+  .attr("stroke-opacity", 0.08);
+
+// Title
+svg.append("text")
+  .attr("x", margin.left)
+  .attr("y", 14)
+  .attr("font-size", "11px")
+  .attr("font-weight", "600")
+  .attr("text-transform", "uppercase")
+  .attr("letter-spacing", "0.08em")
+  .attr("fill", "currentColor")
+  .attr("opacity", 0.4)
+  .text("GLOBAL DEVELOPMENT INDICATORS — 2025");
+`;
+
 // ---- Helpers ----
 
 function genId() {
@@ -561,6 +677,12 @@ function ThreadPair({
             )}
           </article>
         </>
+      )}
+
+      {/* Insights visualization */}
+      {assistantMsg && !assistantMsg.isStreaming &&
+        /insight/i.test(userMsg.text) && (
+        <D3Renderer code={INSIGHTS_D3_CODE} className="mt-8" />
       )}
 
       {/* Loading dots when streaming with no text yet */}
